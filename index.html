@@ -186,6 +186,71 @@
     animation: ultramanGlow .6s ease-in-out 3;
   }
 
+  /* streak bar */
+  .streak-bar {
+    text-align:center;
+    font-size:1rem;
+    font-weight:700;
+    margin-bottom:12px;
+    padding:8px 14px;
+    background: var(--surface);
+    border:1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  .streak-bar .fire { font-size:1.2rem; }
+  .streak-bar .days { color:var(--accent); }
+  /* urgency alert */
+  .urgent-bar {
+    background: #fff3cd;
+    border:1px solid #ffc107;
+    color: #856404;
+    padding:10px 16px;
+    border-radius:8px;
+    margin-bottom:16px;
+    text-align:center;
+    font-size:.9rem;
+    font-weight:600;
+    animation: pulse-urgent 2s ease-in-out infinite;
+    display:none;
+  }
+  @keyframes pulse-urgent {
+    0%,100% { box-shadow: 0 0 0 0 rgba(255,193,7,.4); }
+    50%     { box-shadow: 0 0 0 12px rgba(255,193,7,0); }
+  }
+  /* celebration overlay */
+  .celebrate-overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:9999;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    animation: fadeIn .3s ease;
+  }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  .celebrate-overlay .msg {
+    font-size:1.4rem; font-weight:700; color:#FFD700; margin-top:12px;
+    text-shadow: 0 0 20px rgba(255,215,0,.8);
+  }
+  .celebrate-overlay .sub { font-size:1rem; color:#fff; margin-top:6px; }
+  .celebrate-overlay .close-btn {
+    margin-top:20px; background:var(--accent); color:#fff; border:none;
+    padding:8px 24px; border-radius:20px; cursor:pointer; font-size:1rem;
+    font-family:var(--font-ja);
+  }
+  /* heatmap */
+  .heatmap { display:flex; gap:6px; justify-content:center; margin-bottom:16px; flex-wrap:wrap; }
+  .heatmap .day-cell {
+    width:36px; height:36px; border-radius:6px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    font-size:.55rem; color:#666; background: var(--tag-bg);
+    transition: transform .15s;
+  }
+  .heatmap .day-cell:hover { transform: scale(1.15); }
+  .heatmap .day-cell.lvl-1 { background: #c8e6c9; }
+  .heatmap .day-cell.lvl-2 { background: #81c784; }
+  .heatmap .day-cell.lvl-3 { background: #4caf50; }
+  .heatmap .day-cell.lvl-4 { background: #2e7d32; color:#fff; }
+  .heatmap .day-cell .dow { font-size:.5rem; opacity:.7; }
+  .heatmap .day-cell .dots { font-weight:700; }
+
   /* grammar */
   .grammar-card {
     background: var(--surface);
@@ -308,6 +373,8 @@
   <!-- ===== WORDS TAB ===== -->
   <div class="tab active" id="tab-words">
     <div class="day-header" id="dayHeader"></div>
+    <div class="streak-bar" id="streakBar"></div>
+    <div class="urgent-bar" id="urgentBar"></div>
     <div class="notif-bar" id="notifBar">
       まだ今日の単語を完了していません！
       <button onclick="requestNotify()">通知を設定</button>
@@ -896,6 +963,69 @@ function spawnUltraman(btn) {
 // ============================================================
 // RENDER
 // ============================================================
+function getStreak() {
+  let mem = getMemWords();
+  let streak = 0;
+  let d = new Date();
+  // check today first — if user studied today, that's day 1
+  let today = d.toISOString().slice(0,10);
+  if (!mem[today] || mem[today].length === 0) {
+    // not studied today yet, count from yesterday
+    d.setDate(d.getDate() - 1);
+  }
+  while (true) {
+    let key = d.toISOString().slice(0,10);
+    let arr = mem[key] || [];
+    if (arr.length >= 10) { streak++; }
+    else { break; }
+    d.setDate(d.getDate() - 1);
+  }
+  return streak;
+}
+
+function celebrateAllDone() {
+  let overlay = document.createElement('div');
+  overlay.className = 'celebrate-overlay';
+  overlay.innerHTML = `
+    <svg viewBox="0 0 120 150" width="120" height="150">
+      <path d="M50 22 L55 2 L60 14 L65 2 L70 22" fill="#FFD700" stroke="#FFA000" stroke-width="1"/>
+      <ellipse cx="60" cy="48" rx="34" ry="36" fill="#D4D4D4" stroke="#999" stroke-width="1.5"/>
+      <ellipse cx="40" cy="60" rx="12" ry="8" fill="#FFAAAA" opacity=".6"/>
+      <ellipse cx="80" cy="60" rx="12" ry="8" fill="#FFAAAA" opacity=".6"/>
+      <ellipse cx="45" cy="44" rx="11" ry="12" fill="#FFD700" stroke="#DDAA00" stroke-width="1"/>
+      <ellipse cx="75" cy="44" rx="11" ry="12" fill="#FFD700" stroke="#DDAA00" stroke-width="1"/>
+      <circle cx="45" cy="44" r="6" fill="#111"/>
+      <circle cx="75" cy="44" r="6" fill="#111"/>
+      <circle cx="42" cy="41" r="2.5" fill="#fff"/>
+      <circle cx="72" cy="41" r="2.5" fill="#fff"/>
+      <!-- V for victory mouth -->
+      <path d="M55 62 L60 68 L65 62" stroke="#555" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="38" y="86" width="44" height="40" rx="10" fill="#D4D4D4" stroke="#999" stroke-width="1.5"/>
+      <rect x="38" y="86" width="44" height="18" rx="8" fill="#FF4444"/>
+      <circle cx="60" cy="106" r="13" fill="#00D4FF" stroke="#0099BB" stroke-width="2"/>
+      <circle cx="60" cy="106" r="10" fill="#66EEFF" opacity=".5"/>
+      <text x="60" y="109" text-anchor="middle" font-size="9" fill="#fff" font-weight="900">N2</text>
+      <!-- arms up (victory pose) -->
+      <ellipse cx="28" cy="80" rx="9" ry="18" fill="#D4D4D4" stroke="#999" stroke-width="1.5" transform="rotate(-30 28 80)"/>
+      <ellipse cx="92" cy="80" rx="9" ry="18" fill="#D4D4D4" stroke="#999" stroke-width="1.5" transform="rotate(30 92 80)"/>
+      <circle cx="24" cy="66" r="6" fill="#FF6666"/>
+      <circle cx="96" cy="66" r="6" fill="#FF6666"/>
+      <!-- sparkles -->
+      <text x="5" y="25" font-size="14" fill="#FFD700">✦</text>
+      <text x="100" y="20" font-size="12" fill="#FFD700">✦</text>
+      <text x="10" y="70" font-size="10" fill="#FFD700">✧</text>
+      <text x="105" y="65" font-size="10" fill="#FFD700">✧</text>
+      <text x="20" y="100" font-size="8" fill="#FFD700">★</text>
+      <text x="95" y="95" font-size="8" fill="#FFD700">★</text>
+    </svg>
+    <div class="msg">すごい！全部覚えた！</div>
+    <div class="sub">今日もよく頑張ったね ヽ(≧▽≦)ノ</div>
+    <button class="close-btn" onclick="this.parentElement.remove()">閉じる</button>
+  `;
+  document.body.appendChild(overlay);
+  setTimeout(function() { if (overlay.parentElement) overlay.remove(); }, 5000);
+}
+
 function renderWords() {
   let words = getDailyWords();
   let memorized = getTodaysMemorized();
@@ -903,6 +1033,27 @@ function renderWords() {
 
   document.getElementById('dayHeader').innerHTML =
     `<strong>${getToday()}</strong> — 今日の単語 20選`;
+
+  // streak
+  let streak = getStreak();
+  let fire = streak >= 30 ? '🔥🔥🔥' : streak >= 14 ? '🔥🔥' : streak >= 7 ? '🔥' : streak > 0 ? '✨' : '💪';
+  let streakMsg = streak > 0
+    ? `<span class="fire">${fire}</span> 連続 <span class="days">${streak}</span> 日勉強中！`
+    : `<span class="fire">💪</span> 今日から始めよう！継続が力だ！`;
+  document.getElementById('streakBar').innerHTML = streakMsg;
+
+  // urgency — after 8pm and not done
+  let urgent = document.getElementById('urgentBar');
+  let hour = new Date().getHours();
+  if (hour >= 20 && cnt < 20) {
+    urgent.style.display = 'block';
+    urgent.innerHTML = `⚠️ もう夜${hour}時！あと ${20-cnt} 単語やっちゃおう！`;
+  } else if (hour < 6 && cnt < 20) {
+    urgent.style.display = 'block';
+    urgent.innerHTML = `🌙 深夜だけど… あと ${20-cnt} 単語！明日のために！`;
+  } else {
+    urgent.style.display = 'none';
+  }
 
   let grid = document.getElementById('wordGrid');
   grid.innerHTML = '';
@@ -924,11 +1075,30 @@ function renderWords() {
   });
 
   // update progress
-  document.getElementById('progText').textContent = `今日の進捗: ${cnt} / 20`;
+  document.getElementById('progText').textContent = streak > 0
+    ? `今日の進捗: ${cnt} / 20 — 連続${streak}日目！`
+    : `今日の進捗: ${cnt} / 20`;
   document.getElementById('progFill').style.width = (cnt/20*100) + '%';
 
-  // notif bar
+  // notif bar & urgency update
   document.getElementById('notifBar').style.display = (cnt < 20) ? 'block' : 'none';
+  if (cnt === 20) {
+    urgent.style.display = 'none';
+    document.getElementById('notifBar').style.display = 'none';
+  }
+  if (hour >= 20 && cnt < 20) {
+    urgent.style.display = 'block';
+    urgent.innerHTML = `⚠️ もう夜${hour}時！あと ${20-cnt} 単語やっちゃおう！`;
+  }
+
+  // COMPLETION — check if just now all 20 done (cnt === 20 and wasn't before)
+  if (cnt === 20) {
+    let key = '__jp_celebrated_' + getToday();
+    if (!localStorage.getItem(key)) {
+      localStorage.setItem(key, '1');
+      setTimeout(celebrateAllDone, 400);
+    }
+  }
 }
 
 function renderGrammar() {
@@ -985,14 +1155,37 @@ function renderProgress() {
     history.push({ date: key, count: arr.length });
   }
 
+  let streak = getStreak();
   document.getElementById('statsRow').innerHTML = `
+    <div class="stat-box" style="border:2px solid var(--accent);">
+      <div class="num">${streak>0?'🔥':''} ${streak}</div>
+      <div class="label">連続学習日数</div>
+    </div>
     <div class="stat-box"><div class="num">${totalMem}</div><div class="label">累計単語数</div></div>
     <div class="stat-box"><div class="num">${days}</div><div class="label">学習日数(30日)</div></div>
     <div class="stat-box"><div class="num">${getMemGrammar().length}</div><div class="label">文法完了</div></div>
-    <div class="stat-box"><div class="num">${WORD_BANK.length}</div><div class="label">収録単語総数</div></div>
   `;
 
-  document.getElementById('historyList').innerHTML = history.reverse().map(h => `
+  // heatmap — last 7 days
+  let heatmapHTML = '<div class="heatmap">';
+  let dows = ['日','一','二','三','四','五','六'];
+  let now = new Date();
+  for (let i=6; i>=0; i--) {
+    let dd = new Date(now);
+    dd.setDate(dd.getDate() - i);
+    let key = dd.toISOString().slice(0,10);
+    let cnt = (mem[key] || []).length;
+    let lvl = cnt >= 20 ? 4 : cnt >= 15 ? 3 : cnt >= 10 ? 2 : cnt > 0 ? 1 : 0;
+    let dow = dows[dd.getDay()];
+    let cls = lvl > 0 ? 'lvl-' + lvl : '';
+    heatmapHTML += `<div class="day-cell ${cls}">
+      <span class="dow">${dow}</span>
+      <span class="dots">${cnt > 0 ? cnt : '—'}</span>
+    </div>`;
+  }
+  heatmapHTML += '</div>';
+
+  document.getElementById('historyList').innerHTML = heatmapHTML + history.reverse().map(h => `
     <li>
       <span class="date">${h.date}</span>
       <span class="cnt">${h.count > 0 ? '✓ ' + h.count + '単語' : '—'}</span>
