@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>奥特曼日语学习秘密基地</title>
+<style>
+  :root {
+    --bg: #fefefe;
+    --surface: #fff;
+    --border: #e0e0e0;
+    --text: #1a1a1a;
+    --text2: #666;
+    --accent: #c62828;
+    --accent2: #e57373;
+    --correct: #2e7d32;
+    --tag-bg: #f5f5f5;
+    --shadow: 0 1px 3px rgba(0,0,0,.08);
+    --radius: 10px;
+    --font-ja: 'Noto Sans JP','Hiragino Sans','Yu Gothic',sans-serif;
+  }
+  .dark {
+    --bg: #1a1a2e;
+    --surface: #252540;
+    --border: #3a3a5c;
+    --text: #e8e8e8;
+    --text2: #aaa;
+    --accent: #ff6b6b;
+    --accent2: #cc5555;
+    --correct: #66bb6a;
+    --tag-bg: #2a2a44;
+    --shadow: 0 1px 4px rgba(0,0,0,.3);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: var(--font-ja);
+    background: var(--bg);
+    color: var(--text);
+    min-height:100vh;
+    line-height:1.6;
+    transition: background .3s, color .3s;
+  }
+  header {
+    background: var(--accent);
+    color: #fff;
+    padding: 14px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+    position:sticky; top:0; z-index:100;
+  }
+  header h1 { font-size:1.3rem; font-weight:700; letter-spacing:.5px; }
+  .header-btns { display:flex; gap:8px; align-items:center; }
+  .header-btns button {
+    background: rgba(255,255,255,.2);
+    border: none;
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size:.85rem;
+    font-family: var(--font-ja);
+    transition: background .2s;
+  }
+  .header-btns button:hover { background: rgba(255,255,255,.35); }
+  nav {
+    display:flex;
+    background: var(--surface);
+    border-bottom:1px solid var(--border);
+    overflow-x:auto;
+  }
+  nav button {
+    flex:1;
+    min-width:80px;
+    padding:12px 8px;
+    border:none;
+    background:none;
+    font-size:.9rem;
+    cursor:pointer;
+    font-family: var(--font-ja);
+    color: var(--text2);
+    border-bottom:2px solid transparent;
+    transition:all .2s;
+    white-space:nowrap;
+  }
+  nav button.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    font-weight:700;
+  }
+  main { max-width:800px; margin:0 auto; padding:16px; }
+  .tab { display:none; }
+  .tab.active { display:block; }
+
+  /* date header */
+  .day-header {
+    text-align:center;
+    padding:10px 0 16px;
+    color: var(--text2);
+    font-size:.9rem;
+  }
+  .day-header strong { color: var(--accent); }
+
+  /* progress bar */
+  .prog-wrap {
+    background: var(--border);
+    border-radius:6px;
+    height:8px;
+    margin-bottom:20px;
+    overflow:hidden;
+  }
+  .prog-fill {
+    height:100%;
+    background: var(--accent);
+    border-radius:6px;
+    transition:width .4s;
+  }
+  .prog-text { text-align:center; font-size:.85rem; color:var(--text2); margin-bottom:6px; }
+
+  /* word grid */
+  .word-grid {
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap:10px;
+  }
+  .word-card {
+    background: var(--surface);
+    border:1px solid var(--border);
+    border-radius: var(--radius);
+    padding:14px;
+    cursor:pointer;
+    user-select:none;
+    box-shadow: var(--shadow);
+    transition: transform .15s, border-color .2s;
+    position:relative;
+  }
+  .word-card:hover { transform: translateY(-2px); border-color: var(--accent2); }
+  .word-card.memorized { border-left:4px solid var(--correct); }
+  .word-card .jp { font-size:1.2rem; font-weight:600; }
+  .word-card .kana { font-size:.85rem; color:var(--text2); margin-top:2px; }
+  .word-card .meaning { font-size:.9rem; color:var(--text2); margin-top:2px; }
+  .word-card .kana { display:block; }
+  .word-card .badge {
+    position:absolute;
+    top:8px; right:10px;
+    font-size:.65rem;
+    background: var(--tag-bg);
+    color: var(--text2);
+    padding:2px 7px;
+    border-radius:10px;
+  }
+  .word-card .mem-btn {
+    margin-top:8px;
+    background: none;
+    border:1px solid var(--correct);
+    color: var(--correct);
+    padding:4px 12px;
+    border-radius:14px;
+    font-size:.75rem;
+    cursor:pointer;
+    font-family: var(--font-ja);
+    transition: all .2s;
+  }
+  .word-card .mem-btn.done { background:var(--correct); color:#fff; }
+
+  /* Ultraman popup */
+  @keyframes ultramanFly {
+    0%   { transform: translate(-50%,0) scale(0); opacity:0; }
+    15%  { transform: translate(-50%,-10px) scale(1.3); opacity:1; }
+    30%  { transform: translate(-50%,-30px) scale(1); opacity:1; }
+    100% { transform: translate(-50%,-120px) scale(.5); opacity:0; }
+  }
+  @keyframes ultramanGlow {
+    0%,100% { filter: drop-shadow(0 0 6px #ffd700); }
+    50%     { filter: drop-shadow(0 0 20px #ffd700) drop-shadow(0 0 40px #ff6b00); }
+  }
+  .ultraman-popup {
+    position:fixed;
+    z-index:9999;
+    pointer-events:none;
+    animation: ultramanFly 1.2s ease-out forwards;
+  }
+  .ultraman-popup svg {
+    animation: ultramanGlow .6s ease-in-out 3;
+  }
+
+  /* grammar */
+  .grammar-card {
+    background: var(--surface);
+    border:1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom:10px;
+    overflow:hidden;
+    box-shadow: var(--shadow);
+  }
+  .grammar-card summary {
+    padding:14px 16px;
+    cursor:pointer;
+    font-weight:600;
+    font-size:1rem;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .grammar-card summary .pat { color:var(--accent); font-size:1.1rem; }
+  .grammar-card summary .lvl {
+    font-size:.65rem;
+    background:var(--accent);
+    color:#fff;
+    padding:1px 8px;
+    border-radius:8px;
+    margin-left:auto;
+  }
+  .grammar-card .body { padding:0 16px 16px; }
+  .grammar-card .body .exp { color:var(--text2); font-size:.9rem; margin-bottom:8px; }
+  .grammar-card .body .ex {
+    background: var(--tag-bg);
+    border-radius:6px;
+    padding:10px 14px;
+    margin-top:6px;
+    font-size:.9rem;
+  }
+  .grammar-card .body .ex .jp { font-weight:600; }
+  .grammar-card .body .ex .cn { color:var(--text2); margin-left:8px; font-size:.85rem; }
+
+  /* progress tab */
+  .stat-row {
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+    margin-bottom:16px;
+  }
+  .stat-box {
+    flex:1; min-width:120px;
+    background: var(--surface);
+    border:1px solid var(--border);
+    border-radius: var(--radius);
+    padding:16px;
+    text-align:center;
+    box-shadow: var(--shadow);
+  }
+  .stat-box .num { font-size:2rem; font-weight:700; color:var(--accent); }
+  .stat-box .label { font-size:.8rem; color:var(--text2); }
+  .history-list { list-style:none; }
+  .history-list li {
+    padding:10px 14px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:8px;
+    margin-bottom:6px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow: var(--shadow);
+  }
+  .history-list li .date { font-weight:600; }
+  .history-list li .cnt { color:var(--correct); font-weight:600; }
+
+  /* notification bar */
+  .notif-bar {
+    background: #fff3cd;
+    border:1px solid #ffc107;
+    color:#856404;
+    padding:10px 16px;
+    border-radius:8px;
+    margin-bottom:16px;
+    display:none;
+    text-align:center;
+    font-size:.9rem;
+  }
+  .notif-bar button {
+    background:#ffc107;
+    border:none;
+    color:#333;
+    padding:4px 12px;
+    border-radius:12px;
+    cursor:pointer;
+    margin-left:8px;
+    font-family:var(--font-ja);
+  }
+
+  /* responsive */
+  @media (max-width:500px) {
+    .word-grid { grid-template-columns:1fr; }
+    header h1 { font-size:1.1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>奥特曼日语学习秘密基地</h1>
+  <div class="header-btns">
+    <button onclick="toggleTheme()" id="themeBtn">🌙 暗色</button>
+    <button onclick="requestNotify()">🔔 提醒</button>
+  </div>
+</header>
+
+<nav>
+  <button class="tab-btn active" data-tab="words">今日の単語</button>
+  <button class="tab-btn" data-tab="grammar">文法</button>
+  <button class="tab-btn" data-tab="progress">進捗</button>
+</nav>
+
+<main>
+  <!-- ===== WORDS TAB ===== -->
+  <div class="tab active" id="tab-words">
+    <div class="day-header" id="dayHeader"></div>
+    <div class="notif-bar" id="notifBar">
+      まだ今日の単語を完了していません！
+      <button onclick="requestNotify()">通知を設定</button>
+    </div>
+    <div class="prog-text" id="progText">今日の進捗: 0 / 20</div>
+    <div class="prog-wrap"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+    <div class="word-grid" id="wordGrid"></div>
+  </div>
+
+  <!-- ===== GRAMMAR TAB ===== -->
+  <div class="tab" id="tab-grammar">
+    <div style="margin-bottom:16px;">
+      <select id="grammarFilter" onchange="renderGrammar()" style="padding:8px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:var(--font-ja);font-size:.9rem;">
+        <option value="all">全部 N5~N2</option>
+        <option value="N5">N5 基礎</option>
+        <option value="N4">N4 初級</option>
+        <option value="N3">N3 中級</option>
+        <option value="N2">N2</option>
+      </select>
+    </div>
+    <div id="grammarList"></div>
+  </div>
+
+  <!-- ===== PROGRESS TAB ===== -->
+  <div class="tab" id="tab-progress">
+    <div class="stat-row" id="statsRow"></div>
+    <h3 style="margin-bottom:10px;">学習履歴（直近30日）</h3>
+    <ul class="history-list" id="historyList"></ul>
+  </div>
+</main>
+
+<script>
+// ============================================================
+// WORD BANK — 252 N5 words, 14 categories
+// ============================================================
+const WORD_BANK = [
+  // 食べ物・飲み物 (food & drink) — 25
+  {j:"食べる",k:"たべる",m:"吃",cat:"食事"},
+  {j:"飲む",k:"のむ",m:"喝",cat:"食事"},
+  {j:"食べ物",k:"たべもの",m:"食物",cat:"食事"},
+  {j:"飲み物",k:"のみもの",m:"饮料",cat:"食事"},
+  {j:"水",k:"みず",m:"水",cat:"食事"},
+  {j:"お茶",k:"おちゃ",m:"茶",cat:"食事"},
+  {j:"ご飯",k:"ごはん",m:"米饭/餐",cat:"食事"},
+  {j:"肉",k:"にく",m:"肉",cat:"食事"},
+  {j:"魚",k:"さかな",m:"鱼",cat:"食事"},
+  {j:"野菜",k:"やさい",m:"蔬菜",cat:"食事"},
+  {j:"果物",k:"くだもの",m:"水果",cat:"食事"},
+  {j:"卵",k:"たまご",m:"鸡蛋",cat:"食事"},
+  {j:"牛乳",k:"ぎゅうにゅう",m:"牛奶",cat:"食事"},
+  {j:"パン",k:"ぱん",m:"面包",cat:"食事"},
+  {j:"お菓子",k:"おかし",m:"点心/零食",cat:"食事"},
+  {j:"塩",k:"しお",m:"盐",cat:"食事"},
+  {j:"砂糖",k:"さとう",m:"糖",cat:"食事"},
+  {j:"美味しい",k:"おいしい",m:"好吃的",cat:"食事"},
+  {j:"まずい",k:"まずい",m:"难吃的",cat:"食事"},
+  {j:"甘い",k:"あまい",m:"甜的",cat:"食事"},
+  {j:"辛い",k:"からい",m:"辣的",cat:"食事"},
+  {j:"朝ご飯",k:"あさごはん",m:"早饭",cat:"食事"},
+  {j:"昼ご飯",k:"ひるごはん",m:"午饭",cat:"食事"},
+  {j:"晩ご飯",k:"ばんごはん",m:"晚饭",cat:"食事"},
+  {j:"料理",k:"りょうり",m:"料理/菜",cat:"食事"},
+
+  // 家族・人 (family & people) — 24
+  {j:"私",k:"わたし",m:"我",cat:"人"},
+  {j:"あなた",k:"あなた",m:"你",cat:"人"},
+  {j:"彼",k:"かれ",m:"他/男朋友",cat:"人"},
+  {j:"彼女",k:"かのじょ",m:"她/女朋友",cat:"人"},
+  {j:"父",k:"ちち",m:"(我)父亲",cat:"人"},
+  {j:"母",k:"はは",m:"(我)母亲",cat:"人"},
+  {j:"お父さん",k:"おとうさん",m:"父亲(尊称)",cat:"人"},
+  {j:"お母さん",k:"おかあさん",m:"母亲(尊称)",cat:"人"},
+  {j:"兄",k:"あに",m:"(我)哥哥",cat:"人"},
+  {j:"姉",k:"あね",m:"(我)姐姐",cat:"人"},
+  {j:"弟",k:"おとうと",m:"弟弟",cat:"人"},
+  {j:"妹",k:"いもうと",m:"妹妹",cat:"人"},
+  {j:"友達",k:"ともだち",m:"朋友",cat:"人"},
+  {j:"先生",k:"せんせい",m:"老师",cat:"人"},
+  {j:"学生",k:"がくせい",m:"学生",cat:"人"},
+  {j:"子供",k:"こども",m:"小孩",cat:"人"},
+  {j:"大人",k:"おとな",m:"大人",cat:"人"},
+  {j:"男",k:"おとこ",m:"男",cat:"人"},
+  {j:"女",k:"おんな",m:"女",cat:"人"},
+  {j:"医者",k:"いしゃ",m:"医生",cat:"人"},
+  {j:"警察",k:"けいさつ",m:"警察",cat:"人"},
+  {j:"人",k:"ひと",m:"人",cat:"人"},
+  {j:"皆さん",k:"みなさん",m:"大家",cat:"人"},
+  {j:"誰",k:"だれ",m:"谁",cat:"人"},
+
+  // 時間・日付 (time & dates) — 24
+  {j:"今日",k:"きょう",m:"今天",cat:"時間"},
+  {j:"明日",k:"あした",m:"明天",cat:"時間"},
+  {j:"昨日",k:"きのう",m:"昨天",cat:"時間"},
+  {j:"今",k:"いま",m:"现在",cat:"時間"},
+  {j:"朝",k:"あさ",m:"早上",cat:"時間"},
+  {j:"昼",k:"ひる",m:"白天/中午",cat:"時間"},
+  {j:"夜",k:"よる",m:"晚上",cat:"時間"},
+  {j:"午前",k:"ごぜん",m:"上午",cat:"時間"},
+  {j:"午後",k:"ごご",m:"下午",cat:"時間"},
+  {j:"毎日",k:"まいにち",m:"每天",cat:"時間"},
+  {j:"毎朝",k:"まいあさ",m:"每天早上",cat:"時間"},
+  {j:"毎晩",k:"まいばん",m:"每天晚上",cat:"時間"},
+  {j:"時計",k:"とけい",m:"钟/表",cat:"時間"},
+  {j:"時間",k:"じかん",m:"时间",cat:"時間"},
+  {j:"分",k:"ふん/ぷん",m:"分钟",cat:"時間"},
+  {j:"今年",k:"ことし",m:"今年",cat:"時間"},
+  {j:"来年",k:"らいねん",m:"明年",cat:"時間"},
+  {j:"去年",k:"きょねん",m:"去年",cat:"時間"},
+  {j:"先週",k:"せんしゅう",m:"上周",cat:"時間"},
+  {j:"来週",k:"らいしゅう",m:"下周",cat:"時間"},
+  {j:"毎週",k:"まいしゅう",m:"每周",cat:"時間"},
+  {j:"時々",k:"ときどき",m:"有时",cat:"時間"},
+  {j:"すぐ",k:"すぐ",m:"马上",cat:"時間"},
+  {j:"もう",k:"もう",m:"已经",cat:"時間"},
+
+  // 場所・方向 (places & directions) — 24
+  {j:"学校",k:"がっこう",m:"学校",cat:"場所"},
+  {j:"病院",k:"びょういん",m:"医院",cat:"場所"},
+  {j:"駅",k:"えき",m:"车站",cat:"場所"},
+  {j:"家",k:"いえ/うち",m:"家",cat:"場所"},
+  {j:"店",k:"みせ",m:"商店",cat:"場所"},
+  {j:"部屋",k:"へや",m:"房间",cat:"場所"},
+  {j:"台所",k:"だいどころ",m:"厨房",cat:"場所"},
+  {j:"出口",k:"でぐち",m:"出口",cat:"場所"},
+  {j:"入り口",k:"いりぐち",m:"入口",cat:"場所"},
+  {j:"外",k:"そと",m:"外面",cat:"場所"},
+  {j:"中",k:"なか",m:"里面",cat:"場所"},
+  {j:"上",k:"うえ",m:"上面",cat:"場所"},
+  {j:"下",k:"した",m:"下面",cat:"場所"},
+  {j:"前",k:"まえ",m:"前面",cat:"場所"},
+  {j:"後ろ",k:"うしろ",m:"后面",cat:"場所"},
+  {j:"右",k:"みぎ",m:"右",cat:"場所"},
+  {j:"左",k:"ひだり",m:"左",cat:"場所"},
+  {j:"隣",k:"となり",m:"隔壁/旁边",cat:"場所"},
+  {j:"近く",k:"ちかく",m:"附近",cat:"場所"},
+  {j:"ここ",k:"ここ",m:"这里",cat:"場所"},
+  {j:"そこ",k:"そこ",m:"那里",cat:"場所"},
+  {j:"どこ",k:"どこ",m:"哪里",cat:"場所"},
+  {j:"方",k:"ほう",m:"方向/方面",cat:"場所"},
+  {j:"所",k:"ところ",m:"地方",cat:"場所"},
+
+  // 動詞① 基本動作 — 30
+  {j:"する",k:"する",m:"做",cat:"動作"},
+  {j:"来る",k:"くる",m:"来",cat:"動作"},
+  {j:"行く",k:"いく",m:"去",cat:"動作"},
+  {j:"見る",k:"みる",m:"看",cat:"動作"},
+  {j:"聞く",k:"きく",m:"听/问",cat:"動作"},
+  {j:"話す",k:"はなす",m:"说/谈",cat:"動作"},
+  {j:"読む",k:"よむ",m:"读",cat:"動作"},
+  {j:"書く",k:"かく",m:"写",cat:"動作"},
+  {j:"買う",k:"かう",m:"买",cat:"動作"},
+  {j:"売る",k:"うる",m:"卖",cat:"動作"},
+  {j:"歩く",k:"あるく",m:"走路",cat:"動作"},
+  {j:"走る",k:"はしる",m:"跑步",cat:"動作"},
+  {j:"座る",k:"すわる",m:"坐",cat:"動作"},
+  {j:"立つ",k:"たつ",m:"站",cat:"動作"},
+  {j:"寝る",k:"ねる",m:"睡觉",cat:"動作"},
+  {j:"起きる",k:"おきる",m:"起床",cat:"動作"},
+  {j:"作る",k:"つくる",m:"制作",cat:"動作"},
+  {j:"使う",k:"つかう",m:"使用",cat:"動作"},
+  {j:"持つ",k:"もつ",m:"拿/持有",cat:"動作"},
+  {j:"取る",k:"とる",m:"取/拿",cat:"動作"},
+  {j:"置く",k:"おく",m:"放置",cat:"動作"},
+  {j:"入れる",k:"いれる",m:"放入",cat:"動作"},
+  {j:"出す",k:"だす",m:"拿出",cat:"動作"},
+  {j:"開ける",k:"あける",m:"打开",cat:"動作"},
+  {j:"閉める",k:"しめる",m:"关闭",cat:"動作"},
+  {j:"会う",k:"あう",m:"见面",cat:"動作"},
+  {j:"待つ",k:"まつ",m:"等待",cat:"動作"},
+  {j:"思う",k:"おもう",m:"想/认为",cat:"動作"},
+  {j:"知る",k:"しる",m:"知道",cat:"動作"},
+  {j:"分かる",k:"わかる",m:"明白/懂",cat:"動作"},
+
+  // 動詞② — 18
+  {j:"勉強する",k:"べんきょうする",m:"学习",cat:"動作"},
+  {j:"教える",k:"おしえる",m:"教",cat:"動作"},
+  {j:"覚える",k:"おぼえる",m:"记住",cat:"動作"},
+  {j:"忘れる",k:"わすれる",m:"忘记",cat:"動作"},
+  {j:"始める",k:"はじめる",m:"开始",cat:"動作"},
+  {j:"終わる",k:"おわる",m:"结束",cat:"動作"},
+  {j:"働く",k:"はたらく",m:"工作",cat:"動作"},
+  {j:"休む",k:"やすむ",m:"休息",cat:"動作"},
+  {j:"遊ぶ",k:"あそぶ",m:"玩",cat:"動作"},
+  {j:"歌う",k:"うたう",m:"唱歌",cat:"動作"},
+  {j:"洗う",k:"あらう",m:"洗",cat:"動作"},
+  {j:"切る",k:"きる",m:"切",cat:"動作"},
+  {j:"送る",k:"おくる",m:"送/寄",cat:"動作"},
+  {j:"着る",k:"きる",m:"穿(上衣)",cat:"動作"},
+  {j:"履く",k:"はく",m:"穿(裤子/鞋)",cat:"動作"},
+  {j:"住む",k:"すむ",m:"居住",cat:"動作"},
+  {j:"帰る",k:"かえる",m:"回去/回家",cat:"動作"},
+  {j:"結婚する",k:"けっこんする",m:"结婚",cat:"動作"},
+
+  // い形容詞 — 20
+  {j:"大きい",k:"おおきい",m:"大的",cat:"形"},
+  {j:"小さい",k:"ちいさい",m:"小的",cat:"形"},
+  {j:"新しい",k:"あたらしい",m:"新的",cat:"形"},
+  {j:"古い",k:"ふるい",m:"旧的",cat:"形"},
+  {j:"高い",k:"たかい",m:"高的/贵的",cat:"形"},
+  {j:"安い",k:"やすい",m:"便宜的",cat:"形"},
+  {j:"暑い",k:"あつい",m:"(天气)热的",cat:"形"},
+  {j:"寒い",k:"さむい",m:"寒冷的",cat:"形"},
+  {j:"早い",k:"はやい",m:"早的/快的",cat:"形"},
+  {j:"遅い",k:"おそい",m:"晚的/慢的",cat:"形"},
+  {j:"遠い",k:"とおい",m:"远的",cat:"形"},
+  {j:"近い",k:"ちかい",m:"近的",cat:"形"},
+  {j:"広い",k:"ひろい",m:"宽广的",cat:"形"},
+  {j:"狭い",k:"せまい",m:"狭窄的",cat:"形"},
+  {j:"明るい",k:"あかるい",m:"明亮的",cat:"形"},
+  {j:"暗い",k:"くらい",m:"暗的",cat:"形"},
+  {j:"楽しい",k:"たのしい",m:"快乐的",cat:"形"},
+  {j:"難しい",k:"むずかしい",m:"困难的",cat:"形"},
+  {j:"優しい",k:"やさしい",m:"温柔的/简单的",cat:"形"},
+  {j:"長い",k:"ながい",m:"长的",cat:"形"},
+
+  // な形容詞 — 16
+  {j:"好き",k:"すき",m:"喜欢",cat:"形"},
+  {j:"嫌い",k:"きらい",m:"讨厌",cat:"形"},
+  {j:"静か",k:"しずか",m:"安静",cat:"形"},
+  {j:"賑やか",k:"にぎやか",m:"热闹",cat:"形"},
+  {j:"便利",k:"べんり",m:"方便",cat:"形"},
+  {j:"不便",k:"ふべん",m:"不方便",cat:"形"},
+  {j:"元気",k:"げんき",m:"精神/健康",cat:"形"},
+  {j:"有名",k:"ゆうめい",m:"有名",cat:"形"},
+  {j:"親切",k:"しんせつ",m:"亲切/热心",cat:"形"},
+  {j:"簡単",k:"かんたん",m:"简单",cat:"形"},
+  {j:"大丈夫",k:"だいじょうぶ",m:"没关系/没问题",cat:"形"},
+  {j:"上手",k:"じょうず",m:"擅长",cat:"形"},
+  {j:"下手",k:"へた",m:"不擅长",cat:"形"},
+  {j:"綺麗",k:"きれい",m:"漂亮/干净",cat:"形"},
+  {j:"大変",k:"たいへん",m:"不得了/辛苦",cat:"形"},
+  {j:"色々",k:"いろいろ",m:"各种各样",cat:"形"},
+
+  // 自然・天気 — 15
+  {j:"天気",k:"てんき",m:"天气",cat:"自然"},
+  {j:"雨",k:"あめ",m:"雨",cat:"自然"},
+  {j:"雪",k:"ゆき",m:"雪",cat:"自然"},
+  {j:"風",k:"かぜ",m:"风",cat:"自然"},
+  {j:"空",k:"そら",m:"天空",cat:"自然"},
+  {j:"山",k:"やま",m:"山",cat:"自然"},
+  {j:"川",k:"かわ",m:"河",cat:"自然"},
+  {j:"海",k:"うみ",m:"海",cat:"自然"},
+  {j:"花",k:"はな",m:"花",cat:"自然"},
+  {j:"木",k:"き",m:"树",cat:"自然"},
+  {j:"春",k:"はる",m:"春天",cat:"自然"},
+  {j:"夏",k:"なつ",m:"夏天",cat:"自然"},
+  {j:"秋",k:"あき",m:"秋天",cat:"自然"},
+  {j:"冬",k:"ふゆ",m:"冬天",cat:"自然"},
+  {j:"星",k:"ほし",m:"星星",cat:"自然"},
+
+  // 交通・乗り物 — 12
+  {j:"電車",k:"でんしゃ",m:"电车",cat:"交通"},
+  {j:"車",k:"くるま",m:"汽车",cat:"交通"},
+  {j:"自転車",k:"じてんしゃ",m:"自行车",cat:"交通"},
+  {j:"バス",k:"ばす",m:"公交",cat:"交通"},
+  {j:"飛行機",k:"ひこうき",m:"飞机",cat:"交通"},
+  {j:"船",k:"ふね",m:"船",cat:"交通"},
+  {j:"切符",k:"きっぷ",m:"票",cat:"交通"},
+  {j:"道",k:"みち",m:"路",cat:"交通"},
+  {j:"地図",k:"ちず",m:"地图",cat:"交通"},
+  {j:"橋",k:"はし",m:"桥",cat:"交通"},
+  {j:"交差点",k:"こうさてん",m:"十字路口",cat:"交通"},
+  {j:"信号",k:"しんごう",m:"红绿灯",cat:"交通"},
+
+  // 買い物・お金 — 14
+  {j:"お金",k:"おかね",m:"钱",cat:"買物"},
+  {j:"高い",k:"たかい",m:"贵的",cat:"買物"},
+  {j:"安い",k:"やすい",m:"便宜的",cat:"買物"},
+  {j:"買い物",k:"かいもの",m:"购物",cat:"買物"},
+  {j:"百円",k:"ひゃくえん",m:"一百日元",cat:"買物"},
+  {j:"千円",k:"せんえん",m:"一千日元",cat:"買物"},
+  {j:"一万円",k:"いちまんえん",m:"一万日元",cat:"買物"},
+  {j:"財布",k:"さいふ",m:"钱包",cat:"買物"},
+  {j:"袋",k:"ふくろ",m:"袋子",cat:"買物"},
+  {j:"多い",k:"おおい",m:"多的",cat:"買物"},
+  {j:"少ない",k:"すくない",m:"少的",cat:"買物"},
+  {j:"半分",k:"はんぶん",m:"一半",cat:"買物"},
+  {j:"全部",k:"ぜんぶ",m:"全部",cat:"買物"},
+  {j:"いくら",k:"いくら",m:"多少钱",cat:"買物"},
+
+  // 色・形 — 12
+  {j:"赤",k:"あか",m:"红色",cat:"色"},
+  {j:"青",k:"あお",m:"蓝色",cat:"色"},
+  {j:"白",k:"しろ",m:"白色",cat:"色"},
+  {j:"黒",k:"くろ",m:"黑色",cat:"色"},
+  {j:"黄色",k:"きいろ",m:"黄色",cat:"色"},
+  {j:"緑",k:"みどり",m:"绿色",cat:"色"},
+  {j:"色",k:"いろ",m:"颜色",cat:"色"},
+  {j:"丸い",k:"まるい",m:"圆的",cat:"色"},
+  {j:"四角い",k:"しかくい",m:"四方的",cat:"色"},
+  {j:"同じ",k:"おなじ",m:"相同",cat:"色"},
+  {j:"違う",k:"ちがう",m:"不同",cat:"色"},
+  {j:"一番",k:"いちばん",m:"最",cat:"色"},
+
+  // 体・健康 — 12
+  {j:"体",k:"からだ",m:"身体",cat:"体"},
+  {j:"頭",k:"あたま",m:"头",cat:"体"},
+  {j:"顔",k:"かお",m:"脸",cat:"体"},
+  {j:"目",k:"め",m:"眼睛",cat:"体"},
+  {j:"耳",k:"みみ",m:"耳朵",cat:"体"},
+  {j:"口",k:"くち",m:"嘴巴",cat:"体"},
+  {j:"手",k:"て",m:"手",cat:"体"},
+  {j:"足",k:"あし",m:"脚",cat:"体"},
+  {j:"病気",k:"びょうき",m:"病",cat:"体"},
+  {j:"薬",k:"くすり",m:"药",cat:"体"},
+  {j:"痛い",k:"いたい",m:"疼的",cat:"体"},
+  {j:"疲れる",k:"つかれる",m:"累/疲劳",cat:"体"},
+
+  // その他 日常 — 12
+  {j:"日本語",k:"にほんご",m:"日语",cat:"他"},
+  {j:"英語",k:"えいご",m:"英语",cat:"他"},
+  {j:"名前",k:"なまえ",m:"名字",cat:"他"},
+  {j:"電話",k:"でんわ",m:"电话",cat:"他"},
+  {j:"手紙",k:"てがみ",m:"信",cat:"他"},
+  {j:"写真",k:"しゃしん",m:"照片",cat:"他"},
+  {j:"宿題",k:"しゅくだい",m:"作业",cat:"他"},
+  {j:"仕事",k:"しごと",m:"工作",cat:"他"},
+  {j:"新聞",k:"しんぶん",m:"报纸",cat:"他"},
+  {j:"本",k:"ほん",m:"书",cat:"他"},
+  {j:"辞書",k:"じしょ",m:"词典",cat:"他"},
+  {j:"言葉",k:"ことば",m:"词语/语言",cat:"他"},
+];
+
+// ============================================================
+// GRAMMAR BANK — 50 grammar points, N5→N2
+// ============================================================
+const GRAMMAR_BANK = [
+  // N5 — 16
+  {pat:"〜は〜です", lvl:"N5", exp:"主题+は+名词+です。最基本的判断句，相当于「～是～」。", ex:[
+    {j:"私は学生です。",c:"我是学生。"},{j:"これは本です。",c:"这是书。"}
+  ]},
+  {pat:"〜は〜ではありません", lvl:"N5", exp:"否定判断句，「不是」。口语中可说 〜じゃありません / 〜じゃないです。", ex:[
+    {j:"私は日本人ではありません。",c:"我不是日本人。"},{j:"それは私のではありません。",c:"那不是我的。"}
+  ]},
+  {pat:"〜が", lvl:"N5", exp:"主语助词。①表示新信息/焦点 ②自然/好恶/能力的对象 ③从句主语。与「は」的核心区别：は表主题（已知信息），が表主语（新信息/焦点）。", ex:[
+    {j:"誰が来ますか？",c:"谁来？"},{j:"私が行きます。",c:"我去。(强调是我)"},{j:"雨が降っています。",c:"正在下雨。"}
+  ]},
+  {pat:"〜を", lvl:"N5", exp:"宾语助词，表示动作的直接对象。", ex:[
+    {j:"本を読みます。",c:"读书。"},{j:"コーヒーを飲みます。",c:"喝咖啡。"}
+  ]},
+  {pat:"〜に (方向/地点/时间)", lvl:"N5", exp:"①方向点：行く・来る・帰る的目的地 ②存在点：いる・ある的位置 ③时间点：动作发生的具体时刻。", ex:[
+    {j:"学校に行きます。",c:"去学校。"},{j:"机の上に本があります。",c:"桌子上有书。"},{j:"7時に起きます。",c:"7点起床。"}
+  ]},
+  {pat:"〜で (地点/手段)", lvl:"N5", exp:"①动作进行的场所 ②交通工具/手段 ③材料。与に的区别：に是静态存在点或方向，で是动态动作场所。", ex:[
+    {j:"図書館で勉強します。",c:"在图书馆学习。"},{j:"電車で行きます。",c:"坐电车去。"},{j:"箸で食べます。",c:"用筷子吃。"}
+  ]},
+  {pat:"〜と (并列/共同)", lvl:"N5", exp:"①并列列举(全部列举) ②共同动作者(と一緒に)。与や的区别：と是全部列出，や是部分列举(还有其它的)。", ex:[
+    {j:"机の上に本とペンがあります。",c:"桌子上有书和笔。"},{j:"友達と遊びます。",c:"和朋友玩。"}
+  ]},
+  {pat:"〜から / 〜まで", lvl:"N5", exp:"から=从/因为，まで=到/直到。表示时间或空间的起点和终点。から也可表示原因理由。", ex:[
+    {j:"9時から5時まで働きます。",c:"从9点工作到5点。"},{j:"家から駅まで歩きます。",c:"从家走到车站。"}
+  ]},
+  {pat:"〜ましょう / 〜ませんか", lvl:"N5", exp:"ましょう=（我们）做…吧（提议/劝诱）。ませんか=不…吗？（更礼貌的邀请）。", ex:[
+    {j:"一緒に行きましょう。",c:"一起去吧。"},{j:"映画を見ませんか。",c:"不看电影吗？"}
+  ]},
+  {pat:"〜てください", lvl:"N5", exp:"请做…。动词て形+ください。请求对方做某事。否定：〜ないでください（请不要…）。", ex:[
+    {j:"ちょっと待ってください。",c:"请等一下。"},{j:"ここで写真を撮らないでください。",c:"请不要在这里拍照。"}
+  ]},
+  {pat:"〜ています", lvl:"N5", exp:"①正在进行(正在做…) ②状态持续(已经…) ③习惯性反复。是N5最重要的语法之一。", ex:[
+    {j:"今、本を読んでいます。",c:"现在正在看书。"},{j:"東京に住んでいます。",c:"住在东京。"}
+  ]},
+  {pat:"〜たい (愿望)", lvl:"N5", exp:"动词ます形去ます+たい。表示第一人称「想做…」。第三人称用〜たがる。", ex:[
+    {j:"日本に行きたいです。",c:"想去日本。"},{j:"何が食べたいですか。",c:"想吃什么？"}
+  ]},
+  {pat:"〜たことがある (经历)", lvl:"N5", exp:"动词た形+ことがある=曾经做过…。否定：〜たことがない（从未做过）。", ex:[
+    {j:"富士山に登ったことがあります。",c:"爬过富士山。"},{j:"まだ日本料理を食べたことがありません。",c:"还没吃过日本料理。"}
+  ]},
+  {pat:"〜ないでください", lvl:"N5", exp:"请不要做…。动词ない形+でください。比〜てはいけません更直接的禁止。", ex:[
+    {j:"タバコを吸わないでください。",c:"请不要吸烟。"},{j:"ここに入らないでください。",c:"请不要进入这里。"}
+  ]},
+  {pat:"〜ましょうか", lvl:"N5", exp:"①（我）帮你做…吧？提议帮助对方 ②我们一起…吗？", ex:[
+    {j:"荷物を持ちましょうか。",c:"我帮你拿行李吧？"},{j:"窓を閉めましょうか。",c:"我帮你关窗吧？"}
+  ]},
+  {pat:"〜が好き/嫌い/上手/下手", lvl:"N5", exp:"〜が+好き(喜欢)/嫌い(讨厌)/上手(擅长)/下手(不擅长)。注意对象用が不用を。", ex:[
+    {j:"猫が好きです。",c:"喜欢猫。"},{j:"日本語が上手ですね。",c:"你日语真好。"}
+  ]},
+
+  // N4 — 14
+  {pat:"〜と思う", lvl:"N4", exp:"我想…/我觉得…。简体句+と思う。表达自己的判断或意见。注意主语是「私」时可省略。", ex:[
+    {j:"明日は雨が降ると思います。",c:"我觉得明天会下雨。"},{j:"この映画は面白いと思いました。",c:"我觉得这部电影很有趣。"}
+  ]},
+  {pat:"〜つもり", lvl:"N4", exp:"打算做…。动词辞书形/ない形+つもり。表示说话人的意图或计划。比〜たい更正式。", ex:[
+    {j:"来年日本に留学するつもりです。",c:"打算明年去日本留学。"},{j:"もうタバコは吸わないつもりです。",c:"打算再也不吸烟了。"}
+  ]},
+  {pat:"〜くなる / 〜になる", lvl:"N4", exp:"变化表达。い形容词去い+くなる=变得…，な形容词/名词+になる=变成…。", ex:[
+    {j:"寒くなりました。",c:"变冷了。"},{j:"医者になりたいです。",c:"想成为医生。"}
+  ]},
+  {pat:"〜ことができる", lvl:"N4", exp:"能…/会…。动词辞书形+ことができる。与可能态（読める・食べられる）几乎同义但更正式。", ex:[
+    {j:"日本語を話すことができます。",c:"会说日语。"},{j:"ここで泳ぐことができません。",c:"这里不能游泳。"}
+  ]},
+  {pat:"〜前に / 〜後で", lvl:"N4", exp:"前に=在做…之前。动词辞书形+前に。後で=在做…之后。动词た形+後で。注意：に的用法容易搞混。", ex:[
+    {j:"寝る前に本を読みます。",c:"睡觉前看书。"},{j:"食事の後で散歩します。",c:"饭后散步。"}
+  ]},
+  {pat:"〜ながら", lvl:"N4", exp:"一边…一边…。动词ます形去ます+ながら。两个动作同时进行，后面的动作是主要动作。", ex:[
+    {j:"音楽を聞きながら勉強します。",c:"一边听音乐一边学习。"},{j:"歩きながら話しましょう。",c:"边走边聊吧。"}
+  ]},
+  {pat:"〜ので (原因理由)", lvl:"N4", exp:"因为…所以…。比から更客观、更礼貌。动词/形容词普通形+ので/なので。商务场合较常用。", ex:[
+    {j:"雨が降ったので、試合は中止です。",c:"因为下雨了，比赛取消。"},{j:"ちょっと暑いので、窓を開けてもいいですか。",c:"有点热，可以开窗吗？"}
+  ]},
+  {pat:"〜でしょう / 〜だろう", lvl:"N4", exp:"①推测(大概…) ②确认(…对吧？) ③でしょう上升语调表示向对方确认。", ex:[
+    {j:"明日は晴れるでしょう。",c:"明天应该会放晴吧。"},{j:"これは田中さんの辞書でしょう？",c:"这是田中的词典吧？"}
+  ]},
+  {pat:"〜かもしれない", lvl:"N4", exp:"也许…/可能…。比でしょう的不确定性更强。简体句+かもしれない。口语：かもね/かもよ。", ex:[
+    {j:"彼は来ないかもしれません。",c:"他可能不来。"},{j:"間違えたかもしれない。",c:"可能搞错了。"}
+  ]},
+  {pat:"〜てしまう", lvl:"N4", exp:"①动作完成(做完) ②遗憾/糟糕的心情(不小心做了)。口语约音：〜ちゃう/〜じゃう。", ex:[
+    {j:"宿題はもうやってしまいました。",c:"作业已经做完了。"},{j:"財布を忘れてしまった。",c:"忘了带钱包(糟糕)。"}
+  ]},
+  {pat:"〜てあげる / 〜てくれる / 〜てもらう", lvl:"N4", exp:"授受动词三件套。あげる=我为别人做；くれる=别人为我做；もらう=我请别人做/别人帮我做。体现人际关系和恩惠方向。", ex:[
+    {j:"友達に日本語を教えてあげた。",c:"我教了朋友日语。"},{j:"彼が宿題を手伝ってくれた。",c:"他帮我做了作业。"},{j:"先生に推薦状を書いてもらった。",c:"请老师帮我写了推荐信。"}
+  ]},
+  {pat:"〜たり〜たりする", lvl:"N4", exp:"又…又…/时而…时而…。列举多个代表性动作。动词た形+り。", ex:[
+    {j:"休みの日は本を読んだり、映画を見たりします。",c:"休息日看看书、看看电影什么的。"}
+  ]},
+  {pat:"〜ば (条件)", lvl:"N4", exp:"如果…就…。动词/形容词假定形+ば。①一般条件 ②建议(〜ばいい)。と更偏客观的自然结果，ば更偏假设条件。", ex:[
+    {j:"春になれば、桜が咲きます。",c:"到了春天樱花就开。"},{j:"薬を飲めば、治ります。",c:"吃了药就会好。"}
+  ]},
+  {pat:"〜ようだ / 〜みたいだ", lvl:"N4", exp:"好像…/似乎…。表示基于感官或直觉的判断。ようだ更书面，みたいだ更口语。与そうだ（传闻）不同。", ex:[
+    {j:"誰か来たようだ。",c:"好像有人来了。"},{j:"あの人は日本人みたいだ。",c:"那个人看起来像日本人。"}
+  ]},
+
+  // N3 — 12
+  {pat:"〜わけだ", lvl:"N3", exp:"当然…/也就是说…。表示基于前面内容的自然结论。わけではない=并非…/不一定…。", ex:[
+    {j:"彼は10年も日本に住んでいたから、日本語が上手なわけだ。",c:"他在日本住了十年，日语好也是当然的。"},{j:"お金が全てというわけではない。",c:"金钱并非一切。"}
+  ]},
+  {pat:"〜べきだ / 〜べきではない", lvl:"N3", exp:"应该…/不应该…。表示基于社会常识或道德的责任义务。比〜なければならない更偏道义。する→すべき/するべき。", ex:[
+    {j:"約束は守るべきだ。",c:"应该遵守约定。"},{j:"人を傷つけるようなことを言うべきではない。",c:"不应该说伤害别人的话。"}
+  ]},
+  {pat:"〜はずだ", lvl:"N3", exp:"应该…（基于逻辑推理）。表示说话人根据已知信息推测，确信度高。与べき的区别：べき是道义应该，はず是逻辑上应该。", ex:[
+    {j:"彼はもう着いたはずだ。",c:"他应该已经到了。"},{j:"そんなはずはない。",c:"不可能/不应该会那样。"}
+  ]},
+  {pat:"〜ことになる / 〜ことにする", lvl:"N3", exp:"ことになる=决定…(外部/客观决定)；ことにする=(我)决定…/当做…。", ex:[
+    {j:"来月東京に転勤することになりました。",c:"下个月被调到东京了(公司决定)。"},{j:"ダイエットすることにした。",c:"我决定减肥。"}
+  ]},
+  {pat:"〜に対して", lvl:"N3", exp:"①对于…(对象) ②与…相反/对比。", ex:[
+    {j:"先生に対して失礼なことを言ってはいけない。",c:"不能对老师说失礼的话。"},{j:"兄が社交的なのに対して、弟は大人しい。",c:"哥哥很善交际，相比之下弟弟很内向。"}
+  ]},
+  {pat:"〜によって (手段/原因/根据)", lvl:"N3", exp:"①根据…不同 ②通过…(手段) ③由于…(原因)。用途很广的N3重点语法。", ex:[
+    {j:"人によって考え方は違う。",c:"想法因人而异。"},{j:"インターネットによって世界中の情報が手に入る。",c:"通过互联网可以获取全世界的信息。"}
+  ]},
+  {pat:"〜うちに", lvl:"N3", exp:"趁着…/在…期间。表示在状态改变之前做某事。", ex:[
+    {j:"若いうちに色々なことを経験したい。",c:"想趁年轻多经历各种事情。"},{j:"忘れないうちにメモしておく。",c:"趁没忘记录下来。"}
+  ]},
+  {pat:"〜一方だ", lvl:"N3", exp:"越来越…/一直…。表示事物朝着一个方向不断发展(多为负面趋势)。", ex:[
+    {j:"物価は上がる一方だ。",c:"物价一个劲地上涨。"},{j:"日本語が下手になる一方だ。",c:"日语越来越差。"}
+  ]},
+  {pat:"〜つつある", lvl:"N3", exp:"正在…（书面语）。比〜ている更正式，常用于书面。表示变化正在发生。", ex:[
+    {j:"景気は回復しつつある。",c:"经济正在恢复。"},{j:"この町は変わりつつある。",c:"这条街正在发生改变。"}
+  ]},
+  {pat:"〜とは限らない", lvl:"N3", exp:"不一定…/未必…。", ex:[
+    {j:"高いものが必ずしも良いとは限らない。",c:"贵的东西不一定就好。"},{j:"有名な店が美味しいとは限らない。",c:"有名的店不一定好吃。"}
+  ]},
+  {pat:"〜ものだ / 〜ことだ", lvl:"N3", exp:"ものだ=①常识/道理(应该…) ②感叹。ことだ=建议/劝告(最好…)。两者容易混淆。", ex:[
+    {j:"人の話はよく聞くものだ。",c:"应该好好听别人说话(常识)。"},{j:"もっと練習することだ。",c:"你应该多练习。"}
+  ]},
+  {pat:"〜わけにはいかない", lvl:"N3", exp:"不能…/不可以…。表示基于情理或责任不能做某事。", ex:[
+    {j:"大事な会議だから休むわけにはいかない。",c:"因为是重要的会议，不能缺席。"},{j:"約束したから行かないわけにはいかない。",c:"已经约好了，不能不去。"}
+  ]},
+
+  // N2 — 8
+  {pat:"〜ものの / 〜とはいえ", lvl:"N2", exp:"虽然…但是…。ものの=虽然承认前项但后项不理想。とはいえ=虽说如此但是…。", ex:[
+    {j:"大学を卒業したものの、仕事が見つからない。",c:"虽然大学毕业了，但找不到工作。"},{j:"春とはいえまだ寒い。",c:"虽说到了春天，但还很冷。"}
+  ]},
+  {pat:"〜かねない / 〜かねる", lvl:"N2", exp:"かねない=可能会…(不好的事)；かねる=很难…/做不到。", ex:[
+    {j:"このままだと大事故になりかねない。",c:"这样下去可能会酿成重大事故。"},{j:"その件についてはお答えしかねます。",c:"关于那件事无法回答。"}
+  ]},
+  {pat:"〜に違いない / 〜に決まっている", lvl:"N2", exp:"一定…/肯定是…。に違いない=确信推量；に決まっている=当然/肯定是(断定更强烈)。", ex:[
+    {j:"あのビルは病院に違いない。",c:"那栋楼一定是医院。"},{j:"そんなことを言ったら彼女が怒るに決まっている。",c:"那样说的话她肯定会生气。"}
+  ]},
+  {pat:"〜をきっかけに / 〜がきっかけで", lvl:"N2", exp:"以…为契机。", ex:[
+    {j:"留学をきっかけに日本語の勉強を始めた。",c:"以留学为契机开始学日语。"}
+  ]},
+  {pat:"〜あまり", lvl:"N2", exp:"由于过度…/太…以至于。表示过度…导致不好的结果。", ex:[
+    {j:"嬉しさのあまり泣いてしまった。",c:"太高兴了以至于哭了。"},{j:"急いだあまり財布を忘れた。",c:"太急了结果忘了钱包。"}
+  ]},
+  {pat:"〜にわたって", lvl:"N2", exp:"在…范围内/持续…时间。强调范围广或时间长(书面)。", ex:[
+    {j:"会議は6時間にわたって続いた。",c:"会议持续了6个小时。"},{j:"全国にわたって調査が行われた。",c:"在全国范围内进行了调查。"}
+  ]},
+  {pat:"〜にほかならない", lvl:"N2", exp:"无非是…/正是…。", ex:[
+    {j:"成功の秘訣は努力にほかならない。",c:"成功的秘诀无非是努力。"}
+  ]},
+  {pat:"〜に越したことはない", lvl:"N2", exp:"…再好不过/最好还是…。", ex:[
+    {j:"お金は多いに越したことはない。",c:"钱多总比少好。"},{j:"体は丈夫なに越したことはない。",c:"身体结实总比虚弱好。"}
+  ]},
+];
+
+// ============================================================
+// STATE
+// ============================================================
+function getToday() { return new Date().toISOString().slice(0,10); }
+function lsGet(k) { try { return JSON.parse(localStorage.getItem(k)); } catch(e) { return null; } }
+function lsSet(k,v) { localStorage.setItem(k, JSON.stringify(v)); }
+
+function getMemWords() { return lsGet('jp_memorized') || {}; }       // { "2026-05-29": ["食べる","飲む",...] }
+function getMemGrammar() { return lsGet('jp_grammar_done') || []; }  // ["〜は〜です", ...]
+function getTheme() { return lsGet('jp_theme') || 'light'; }
+
+// deterministic shuffle based on seed (date string)
+function seededShuffle(arr, seed) {
+  let a = arr.slice();
+  let hash = 0;
+  for (let i=0; i<seed.length; i++) { hash = ((hash<<5)-hash)+seed.charCodeAt(i); hash |= 0; }
+  for (let i=a.length-1; i>0; i--) {
+    hash = (hash*1103515245 + 12345) | 0;
+    let j = ((hash>>>0) % (i+1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getDailyWords() {
+  let today = getToday();
+  let shuffled = seededShuffle(WORD_BANK, today);
+  return shuffled.slice(0, 20);
+}
+
+function getTodaysMemorized() {
+  let m = getMemWords();
+  return m[getToday()] || [];
+}
+
+function toggleWord(jp, btn) {
+  let m = getMemWords();
+  let today = getToday();
+  if (!m[today]) m[today] = [];
+  let idx = m[today].indexOf(jp);
+  if (idx >= 0) {
+    m[today].splice(idx, 1);
+  } else {
+    m[today].push(jp);
+    if (btn) spawnUltraman(btn);
+  }
+  lsSet('jp_memorized', m);
+  renderWords();
+}
+
+function spawnUltraman(btn) {
+  let rect = btn.getBoundingClientRect();
+  let popup = document.createElement('div');
+  popup.className = 'ultraman-popup';
+  popup.style.left = (rect.left + rect.width/2) + 'px';
+  popup.style.top = (rect.top) + 'px';
+  popup.innerHTML = `<svg viewBox="0 0 120 140" width="75" height="85">
+    <!-- head crest (fin on top) -->
+    <path d="M50 18 L55 2 L60 12 L65 2 L70 18" fill="#FF4444" stroke="#CC0000" stroke-width="1"/>
+    <!-- head (oversized chibi) -->
+    <ellipse cx="60" cy="42" rx="30" ry="32" fill="#D4D4D4" stroke="#999" stroke-width="1.5"/>
+    <!-- cheeks (cute blush) -->
+    <ellipse cx="36" cy="52" rx="10" ry="7" fill="#FFAAAA" opacity=".6"/>
+    <ellipse cx="84" cy="52" rx="10" ry="7" fill="#FFAAAA" opacity=".6"/>
+    <!-- eyes (big sparkly chibi) -->
+    <ellipse cx="46" cy="38" rx="10" ry="11" fill="#FFD700" stroke="#DDAA00" stroke-width="1"/>
+    <ellipse cx="74" cy="38" rx="10" ry="11" fill="#FFD700" stroke="#DDAA00" stroke-width="1"/>
+    <!-- pupils -->
+    <circle cx="46" cy="38" r="5.5" fill="#111"/>
+    <circle cx="74" cy="38" r="5.5" fill="#111"/>
+    <!-- eye sparkle -->
+    <circle cx="43" cy="36" r="2" fill="#fff"/>
+    <circle cx="71" cy="36" r="2" fill="#fff"/>
+    <!-- tiny mouth (cute smile) -->
+    <path d="M56 52 Q60 56 64 52" stroke="#555" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <!-- body -->
+    <rect x="40" y="76" width="40" height="36" rx="10" fill="#D4D4D4" stroke="#999" stroke-width="1.5"/>
+    <!-- red chest stripe -->
+    <rect x="40" y="76" width="40" height="16" rx="8" fill="#FF4444"/>
+    <!-- color timer (glowing) -->
+    <circle cx="60" cy="94" r="12" fill="#00D4FF" stroke="#0099BB" stroke-width="2"/>
+    <circle cx="60" cy="94" r="9" fill="#66EEFF" opacity=".5"/>
+    <text x="60" y="97" text-anchor="middle" font-size="8" fill="#fff" font-weight="900">N2</text>
+    <!-- arms -->
+    <ellipse cx="32" cy="85" rx="9" ry="14" fill="#D4D4D4" stroke="#999" stroke-width="1.5" transform="rotate(15 32 85)"/>
+    <ellipse cx="88" cy="85" rx="9" ry="14" fill="#D4D4D4" stroke="#999" stroke-width="1.5" transform="rotate(-15 88 85)"/>
+    <!-- tiny hands -->
+    <circle cx="30" cy="94" r="5" fill="#FF6666"/>
+    <circle cx="90" cy="94" r="5" fill="#FF6666"/>
+    <!-- star sparkles around -->
+    <text x="12" y="20" font-size="12" fill="#FFD700">✦</text>
+    <text x="98" y="15" font-size="10" fill="#FFD700">✦</text>
+    <text x="8" y="65" font-size="8" fill="#FFD700">✧</text>
+    <text x="102" y="65" font-size="8" fill="#FFD700">✧</text>
+  </svg>`;
+  document.body.appendChild(popup);
+  setTimeout(function() { popup.remove(); }, 1300);
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function renderWords() {
+  let words = getDailyWords();
+  let memorized = getTodaysMemorized();
+  let cnt = 0;
+
+  document.getElementById('dayHeader').innerHTML =
+    `<strong>${getToday()}</strong> — 今日の単語 20選`;
+
+  let grid = document.getElementById('wordGrid');
+  grid.innerHTML = '';
+
+  words.forEach(w => {
+    let isMem = memorized.includes(w.j);
+    if (isMem) cnt++;
+    let card = document.createElement('div');
+    card.className = 'word-card' + (isMem ? ' memorized' : '');
+    card.innerHTML = `
+      <span class="badge">${w.cat}</span>
+      <div class="jp">${w.j} <span style="font-size:.8rem;color:var(--text2);font-weight:400;">${w.m}</span></div>
+      <div class="kana">${w.k}</div>
+      <button class="mem-btn${isMem ? ' done' : ''}" onclick="event.stopPropagation();toggleWord('${w.j}', this)">
+        ${isMem ? '✓ 覚えた' : '覚えた？'}
+      </button>
+    `;
+    grid.appendChild(card);
+  });
+
+  // update progress
+  document.getElementById('progText').textContent = `今日の進捗: ${cnt} / 20`;
+  document.getElementById('progFill').style.width = (cnt/20*100) + '%';
+
+  // notif bar
+  document.getElementById('notifBar').style.display = (cnt < 20) ? 'block' : 'none';
+}
+
+function renderGrammar() {
+  let filter = document.getElementById('grammarFilter').value;
+  let list = document.getElementById('grammarList');
+  let done = getMemGrammar();
+  let data = filter === 'all' ? GRAMMAR_BANK : GRAMMAR_BANK.filter(g => g.lvl === filter);
+
+  list.innerHTML = data.map((g, i) => `
+    <details class="grammar-card" ${done.includes(g.pat) ? '' : ''}>
+      <summary>
+        <span class="pat">${g.pat}</span>
+        <span class="lvl">${g.lvl}</span>
+      </summary>
+      <div class="body">
+        <div class="exp">${g.exp}</div>
+        ${g.ex.map(e => `<div class="ex"><span class="jp">${e.j}</span><span class="cn">${e.c}</span></div>`).join('')}
+        <button onclick="event.preventDefault();toggleGrammarDone('${g.pat.replace(/'/g,"\\'")}')"
+          style="margin-top:10px;background:var(--accent);color:#fff;border:none;padding:5px 14px;border-radius:12px;cursor:pointer;font-family:var(--font-ja);font-size:.8rem;">
+          ${done.includes(g.pat) ? '✓ 完了' : '完了にする'}
+        </button>
+      </div>
+    </details>
+  `).join('');
+}
+
+function toggleGrammarDone(pat) {
+  let done = getMemGrammar();
+  let idx = done.indexOf(pat);
+  if (idx >= 0) { done.splice(idx, 1); }
+  else { done.push(pat); }
+  lsSet('jp_grammar_done', done);
+  renderGrammar();
+}
+
+function renderProgress() {
+  // stats
+  let mem = getMemWords();
+  let totalMem = 0;
+  let days = 0;
+  let today = getToday();
+  let d = new Date();
+  let history = [];
+
+  for (let i=29; i>=0; i--) {
+    let dd = new Date(d);
+    dd.setDate(dd.getDate() - i);
+    let key = dd.toISOString().slice(0,10);
+    let arr = mem[key] || [];
+    if (arr.length > 0) {
+      totalMem += arr.length;
+      days++;
+    }
+    history.push({ date: key, count: arr.length });
+  }
+
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat-box"><div class="num">${totalMem}</div><div class="label">累計単語数</div></div>
+    <div class="stat-box"><div class="num">${days}</div><div class="label">学習日数(30日)</div></div>
+    <div class="stat-box"><div class="num">${getMemGrammar().length}</div><div class="label">文法完了</div></div>
+    <div class="stat-box"><div class="num">${WORD_BANK.length}</div><div class="label">収録単語総数</div></div>
+  `;
+
+  document.getElementById('historyList').innerHTML = history.reverse().map(h => `
+    <li>
+      <span class="date">${h.date}</span>
+      <span class="cnt">${h.count > 0 ? '✓ ' + h.count + '単語' : '—'}</span>
+    </li>
+  `).join('');
+}
+
+// ============================================================
+// TABS
+// ============================================================
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+    document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+    if (this.dataset.tab === 'progress') renderProgress();
+  });
+});
+
+// ============================================================
+// THEME
+// ============================================================
+function toggleTheme() {
+  let cur = document.body.classList.contains('dark') ? 'light' : 'dark';
+  document.body.classList.toggle('dark', cur === 'dark');
+  lsSet('jp_theme', cur);
+  document.getElementById('themeBtn').textContent = cur === 'dark' ? '☀️ 明色' : '🌙 暗色';
+}
+
+(function initTheme() {
+  let t = getTheme();
+  if (t === 'dark') {
+    document.body.classList.add('dark');
+    document.getElementById('themeBtn').textContent = '☀️ 明色';
+  }
+})();
+
+// ============================================================
+// NOTIFICATION
+// ============================================================
+function requestNotify() {
+  if (!('Notification' in window)) { alert('このブラウザは通知に対応していません。'); return; }
+  if (Notification.permission === 'granted') {
+    scheduleNotification();
+    alert('通知を設定しました！毎日朝9時にリマインドします。');
+  } else if (Notification.permission === 'denied') {
+    alert('通知がブロックされています。ブラウザの設定から許可してください。');
+  } else {
+    Notification.requestPermission().then(p => {
+      if (p === 'granted') {
+        scheduleNotification();
+        alert('通知を設定しました！');
+      }
+    });
+  }
+}
+
+function scheduleNotification() {
+  let now = new Date();
+  let target = new Date(now);
+  target.setHours(9, 0, 0, 0);
+  if (target <= now) target.setDate(target.getDate() + 1);
+  let delay = target.getTime() - now.getTime();
+
+  // show immediate demo notification
+  if (Notification.permission === 'granted') {
+    new Notification('奥特曼日语学习秘密基地', { body: '今日も20単語を覚えよう！📚', icon: '📖' });
+    // schedule next one
+    setTimeout(() => {
+      new Notification('奥特曼日语学习秘密基地', { body: '今日の単語はもうチェックした？20単語覚えよう！', icon: '📖' });
+      // then schedule daily
+      setInterval(() => {
+        new Notification('奥特曼日语学习秘密基地', { body: '今日の単語はもうチェックした？20単語覚えよう！', icon: '📖' });
+      }, 86400000);
+    }, delay);
+  }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+renderWords();
+renderGrammar();
+</script>
+</body>
+</html>
