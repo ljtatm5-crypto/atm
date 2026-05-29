@@ -178,7 +178,7 @@
     pointer-events:none;
     animation: ultramanFly 1.2s ease-out forwards;
   }
-  .ultraman-popup img {
+  .ultraman-popup svg {
     animation: ultramanGlow .6s ease-in-out 3;
   }
   @keyframes ultramanGlow {
@@ -2233,27 +2233,40 @@ function toggleWord(jp, btn) {
   renderWords();
 }
 
-const REWARD_IMAGES = ['reward_1.png','reward_2.png','reward_3.png','reward_4.png'];
-// preload all reward images
-REWARD_IMAGES.forEach(function(src) { let img = new Image(); img.src = src; });
-function randomReward() { return REWARD_IMAGES[Math.floor(Math.random() * REWARD_IMAGES.length)]; }
-
 function spawnUltraman(btn) {
   let rect = btn.getBoundingClientRect();
   let popup = document.createElement('div');
   popup.className = 'ultraman-popup';
   popup.style.left = (rect.left + rect.width/2) + 'px';
   popup.style.top = (rect.top) + 'px';
-  let img = new Image();
-  img.src = randomReward();
-  img.style.width = '90px';
-  img.style.height = '90px';
-  img.style.borderRadius = '12px';
-  img.style.objectFit = 'cover';
-  img.style.boxShadow = '0 4px 20px rgba(255,107,107,.6)';
-  popup.appendChild(img);
+  popup.innerHTML = `<svg viewBox="0 0 120 140" width="75" height="85">
+    <path d="M50 18 L55 2 L60 12 L65 2 L70 18" fill="#FF4444" stroke="#CC0000" stroke-width="1"/>
+    <ellipse cx="60" cy="42" rx="30" ry="32" fill="#D4D4D4" stroke="#999" stroke-width="1.5"/>
+    <ellipse cx="36" cy="52" rx="10" ry="7" fill="#FFAAAA" opacity=".6"/>
+    <ellipse cx="84" cy="52" rx="10" ry="7" fill="#FFAAAA" opacity=".6"/>
+    <ellipse cx="46" cy="38" rx="10" ry="11" fill="#FFD700" stroke="#DDAA00" stroke-width="1"/>
+    <ellipse cx="74" cy="38" rx="10" ry="11" fill="#FFD700" stroke="#DDAA00" stroke-width="1"/>
+    <circle cx="46" cy="38" r="5.5" fill="#111"/>
+    <circle cx="74" cy="38" r="5.5" fill="#111"/>
+    <circle cx="43" cy="36" r="2" fill="#fff"/>
+    <circle cx="71" cy="36" r="2" fill="#fff"/>
+    <path d="M56 52 Q60 56 64 52" stroke="#555" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <rect x="40" y="76" width="40" height="36" rx="10" fill="#D4D4D4" stroke="#999" stroke-width="1.5"/>
+    <rect x="40" y="76" width="40" height="16" rx="8" fill="#FF4444"/>
+    <circle cx="60" cy="94" r="12" fill="#00D4FF" stroke="#0099BB" stroke-width="2"/>
+    <circle cx="60" cy="94" r="9" fill="#66EEFF" opacity=".5"/>
+    <text x="60" y="97" text-anchor="middle" font-size="8" fill="#fff" font-weight="900">N2</text>
+    <ellipse cx="32" cy="85" rx="9" ry="14" fill="#D4D4D4" stroke="#999" stroke-width="1.5" transform="rotate(15 32 85)"/>
+    <ellipse cx="88" cy="85" rx="9" ry="14" fill="#D4D4D4" stroke="#999" stroke-width="1.5" transform="rotate(-15 88 85)"/>
+    <circle cx="30" cy="94" r="5" fill="#FF6666"/>
+    <circle cx="90" cy="94" r="5" fill="#FF6666"/>
+    <text x="12" y="20" font-size="12" fill="#FFD700">✦</text>
+    <text x="98" y="15" font-size="10" fill="#FFD700">✦</text>
+    <text x="8" y="65" font-size="8" fill="#FFD700">✧</text>
+    <text x="102" y="65" font-size="8" fill="#FFD700">✧</text>
+  </svg>`;
   document.body.appendChild(popup);
-  setTimeout(function() { popup.remove(); }, 1500);
+  setTimeout(function() { popup.remove(); }, 1300);
 }
 
 // ============================================================
@@ -2282,28 +2295,39 @@ function getStreak() {
 function celebrateAllDone() {
   let overlay = document.createElement('div');
   overlay.className = 'celebrate-overlay';
-  let img = new Image();
-  img.src = randomReward();
-  img.style.width = '200px';
-  img.style.height = '200px';
-  img.style.borderRadius = '20px';
-  img.style.objectFit = 'cover';
-  img.style.boxShadow = '0 8px 40px rgba(255,215,0,.5)';
-  img.style.marginBottom = '10px';
-  overlay.appendChild(img);
-  let msg = document.createElement('div');
-  msg.className = 'msg';
-  msg.textContent = 'すごい！全部覚えた！';
-  overlay.appendChild(msg);
-  let sub = document.createElement('div');
-  sub.className = 'sub';
-  sub.innerHTML = '今日もよく頑張ったね ヽ(≧▽≦)ノ';
-  overlay.appendChild(sub);
-  let closeBtn = document.createElement('button');
-  closeBtn.className = 'close-btn';
-  closeBtn.textContent = '閉じる';
-  closeBtn.onclick = function() { overlay.remove(); };
-  overlay.appendChild(closeBtn);
+  overlay.innerHTML = `
+    <svg viewBox="0 0 120 150" width="120" height="150">
+      <path d="M50 22 L55 2 L60 14 L65 2 L70 22" fill="#FFD700" stroke="#FFA000" stroke-width="1"/>
+      <ellipse cx="60" cy="48" rx="34" ry="36" fill="#D4D4D4" stroke="#999" stroke-width="1.5"/>
+      <ellipse cx="40" cy="60" rx="12" ry="8" fill="#FFAAAA" opacity=".6"/>
+      <ellipse cx="80" cy="60" rx="12" ry="8" fill="#FFAAAA" opacity=".6"/>
+      <ellipse cx="45" cy="44" rx="11" ry="12" fill="#FFD700" stroke="#DDAA00" stroke-width="1"/>
+      <ellipse cx="75" cy="44" rx="11" ry="12" fill="#FFD700" stroke="#DDAA00" stroke-width="1"/>
+      <circle cx="45" cy="44" r="6" fill="#111"/>
+      <circle cx="75" cy="44" r="6" fill="#111"/>
+      <circle cx="42" cy="41" r="2.5" fill="#fff"/>
+      <circle cx="72" cy="41" r="2.5" fill="#fff"/>
+      <path d="M55 62 L60 68 L65 62" stroke="#555" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="38" y="86" width="44" height="40" rx="10" fill="#D4D4D4" stroke="#999" stroke-width="1.5"/>
+      <rect x="38" y="86" width="44" height="18" rx="8" fill="#FF4444"/>
+      <circle cx="60" cy="106" r="13" fill="#00D4FF" stroke="#0099BB" stroke-width="2"/>
+      <circle cx="60" cy="106" r="10" fill="#66EEFF" opacity=".5"/>
+      <text x="60" y="109" text-anchor="middle" font-size="9" fill="#fff" font-weight="900">N2</text>
+      <ellipse cx="28" cy="80" rx="9" ry="18" fill="#D4D4D4" stroke="#999" stroke-width="1.5" transform="rotate(-30 28 80)"/>
+      <ellipse cx="92" cy="80" rx="9" ry="18" fill="#D4D4D4" stroke="#999" stroke-width="1.5" transform="rotate(30 92 80)"/>
+      <circle cx="24" cy="66" r="6" fill="#FF6666"/>
+      <circle cx="96" cy="66" r="6" fill="#FF6666"/>
+      <text x="5" y="25" font-size="14" fill="#FFD700">✦</text>
+      <text x="100" y="20" font-size="12" fill="#FFD700">✦</text>
+      <text x="10" y="70" font-size="10" fill="#FFD700">✧</text>
+      <text x="105" y="65" font-size="10" fill="#FFD700">✧</text>
+      <text x="20" y="100" font-size="8" fill="#FFD700">★</text>
+      <text x="95" y="95" font-size="8" fill="#FFD700">★</text>
+    </svg>
+    <div class="msg">すごい！全部覚えた！</div>
+    <div class="sub">今日もよく頑張ったね ヽ(≧▽≦)ノ</div>
+    <button class="close-btn" onclick="this.parentElement.remove()">閉じる</button>
+  `;
   document.body.appendChild(overlay);
   setTimeout(function() { if (overlay.parentElement) overlay.remove(); }, 5000);
 }
