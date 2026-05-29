@@ -165,12 +165,16 @@
   }
   .word-card .mem-btn.done { background:var(--correct); color:#fff; }
 
-  /* Ultraman popup - now shows reward photo */
+  /* Ultraman popup */
   @keyframes ultramanFly {
     0%   { transform: translate(-50%,0) scale(0); opacity:0; }
     15%  { transform: translate(-50%,-10px) scale(1.3); opacity:1; }
     30%  { transform: translate(-50%,-30px) scale(1); opacity:1; }
     100% { transform: translate(-50%,-120px) scale(.5); opacity:0; }
+  }
+  @keyframes ultramanGlow {
+    0%,100% { filter: drop-shadow(0 0 6px #ffd700); }
+    50%     { filter: drop-shadow(0 0 20px #ffd700) drop-shadow(0 0 40px #ff6b00); }
   }
   .ultraman-popup {
     position:fixed;
@@ -180,10 +184,6 @@
   }
   .ultraman-popup svg {
     animation: ultramanGlow .6s ease-in-out 3;
-  }
-  @keyframes ultramanGlow {
-    0%,100% { filter: drop-shadow(0 0 6px #ffd700); }
-    50%     { filter: drop-shadow(0 0 20px #ffd700) drop-shadow(0 0 40px #ff6b00); }
   }
 
   /* streak bar */
@@ -427,6 +427,11 @@
   <p style="margin:0 0 8px;">请在浏览器中打开以获得完整体验</p>
   <p style="margin:0;font-size:.75rem;opacity:.7;">点击右上角 <strong>···</strong> → <strong>在浏览器中打开</strong></p>
 </div>
+<script>
+if (/MicroMessenger/i.test(navigator.userAgent)) {
+  document.getElementById('wechatTip').style.display = 'block';
+}
+</script>
 
 <header>
   <h1>奥特曼日语学习秘密基地</h1>
@@ -2240,26 +2245,39 @@ function spawnUltraman(btn) {
   popup.style.left = (rect.left + rect.width/2) + 'px';
   popup.style.top = (rect.top) + 'px';
   popup.innerHTML = `<svg viewBox="0 0 120 140" width="75" height="85">
+    <!-- head crest (fin on top) -->
     <path d="M50 18 L55 2 L60 12 L65 2 L70 18" fill="#FF4444" stroke="#CC0000" stroke-width="1"/>
+    <!-- head (oversized chibi) -->
     <ellipse cx="60" cy="42" rx="30" ry="32" fill="#D4D4D4" stroke="#999" stroke-width="1.5"/>
+    <!-- cheeks (cute blush) -->
     <ellipse cx="36" cy="52" rx="10" ry="7" fill="#FFAAAA" opacity=".6"/>
     <ellipse cx="84" cy="52" rx="10" ry="7" fill="#FFAAAA" opacity=".6"/>
+    <!-- eyes (big sparkly chibi) -->
     <ellipse cx="46" cy="38" rx="10" ry="11" fill="#FFD700" stroke="#DDAA00" stroke-width="1"/>
     <ellipse cx="74" cy="38" rx="10" ry="11" fill="#FFD700" stroke="#DDAA00" stroke-width="1"/>
+    <!-- pupils -->
     <circle cx="46" cy="38" r="5.5" fill="#111"/>
     <circle cx="74" cy="38" r="5.5" fill="#111"/>
+    <!-- eye sparkle -->
     <circle cx="43" cy="36" r="2" fill="#fff"/>
     <circle cx="71" cy="36" r="2" fill="#fff"/>
+    <!-- tiny mouth (cute smile) -->
     <path d="M56 52 Q60 56 64 52" stroke="#555" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <!-- body -->
     <rect x="40" y="76" width="40" height="36" rx="10" fill="#D4D4D4" stroke="#999" stroke-width="1.5"/>
+    <!-- red chest stripe -->
     <rect x="40" y="76" width="40" height="16" rx="8" fill="#FF4444"/>
+    <!-- color timer (glowing) -->
     <circle cx="60" cy="94" r="12" fill="#00D4FF" stroke="#0099BB" stroke-width="2"/>
     <circle cx="60" cy="94" r="9" fill="#66EEFF" opacity=".5"/>
     <text x="60" y="97" text-anchor="middle" font-size="8" fill="#fff" font-weight="900">N2</text>
+    <!-- arms -->
     <ellipse cx="32" cy="85" rx="9" ry="14" fill="#D4D4D4" stroke="#999" stroke-width="1.5" transform="rotate(15 32 85)"/>
     <ellipse cx="88" cy="85" rx="9" ry="14" fill="#D4D4D4" stroke="#999" stroke-width="1.5" transform="rotate(-15 88 85)"/>
+    <!-- tiny hands -->
     <circle cx="30" cy="94" r="5" fill="#FF6666"/>
     <circle cx="90" cy="94" r="5" fill="#FF6666"/>
+    <!-- star sparkles around -->
     <text x="12" y="20" font-size="12" fill="#FFD700">✦</text>
     <text x="98" y="15" font-size="10" fill="#FFD700">✦</text>
     <text x="8" y="65" font-size="8" fill="#FFD700">✧</text>
@@ -2307,16 +2325,19 @@ function celebrateAllDone() {
       <circle cx="75" cy="44" r="6" fill="#111"/>
       <circle cx="42" cy="41" r="2.5" fill="#fff"/>
       <circle cx="72" cy="41" r="2.5" fill="#fff"/>
+      <!-- V for victory mouth -->
       <path d="M55 62 L60 68 L65 62" stroke="#555" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
       <rect x="38" y="86" width="44" height="40" rx="10" fill="#D4D4D4" stroke="#999" stroke-width="1.5"/>
       <rect x="38" y="86" width="44" height="18" rx="8" fill="#FF4444"/>
       <circle cx="60" cy="106" r="13" fill="#00D4FF" stroke="#0099BB" stroke-width="2"/>
       <circle cx="60" cy="106" r="10" fill="#66EEFF" opacity=".5"/>
       <text x="60" y="109" text-anchor="middle" font-size="9" fill="#fff" font-weight="900">N2</text>
+      <!-- arms up (victory pose) -->
       <ellipse cx="28" cy="80" rx="9" ry="18" fill="#D4D4D4" stroke="#999" stroke-width="1.5" transform="rotate(-30 28 80)"/>
       <ellipse cx="92" cy="80" rx="9" ry="18" fill="#D4D4D4" stroke="#999" stroke-width="1.5" transform="rotate(30 92 80)"/>
       <circle cx="24" cy="66" r="6" fill="#FF6666"/>
       <circle cx="96" cy="66" r="6" fill="#FF6666"/>
+      <!-- sparkles -->
       <text x="5" y="25" font-size="14" fill="#FFD700">✦</text>
       <text x="100" y="20" font-size="12" fill="#FFD700">✦</text>
       <text x="10" y="70" font-size="10" fill="#FFD700">✧</text>
@@ -2586,12 +2607,6 @@ function scheduleNotification() {
 // ============================================================
 renderWords();
 renderGrammar();
-
-// wechat detection (at bottom, after DOM ready)
-if (/MicroMessenger/i.test(navigator.userAgent)) {
-  var tip = document.getElementById('wechatTip');
-  if (tip) tip.style.display = 'block';
-}
 </script>
 </body>
 </html>
