@@ -2203,7 +2203,7 @@ function spawnUltraman(btn) {
   popup.style.top = (rect.top) + 'px';
   popup.innerHTML = '<img src="reward_3.png?v=2" style="width:110px;height:110px;border-radius:14px;object-fit:contain;box-shadow:0 0 24px rgba(255,215,0,.5);" />';
   document.body.appendChild(popup);
-  setTimeout(function() { popup.remove(); }, 3000);
+  setTimeout(function() { popup.remove(); }, 4000);
 }
 
 // ============================================================
@@ -2239,7 +2239,7 @@ function celebrateAllDone() {
     <button class="close-btn" onclick="this.parentElement.remove()">閉じる</button>
   `;
   document.body.appendChild(overlay);
-  setTimeout(function() { if (overlay.parentElement) overlay.remove(); }, 8000);
+  setTimeout(function() { if (overlay.parentElement) overlay.remove(); }, 12000);
 }
 
 function renderWords() {
