@@ -423,6 +423,16 @@
 </head>
 <body>
 
+<div id="wechatTip" style="display:none;position:fixed;top:0;left:0;right:0;z-index:99999;background:#1a1a2e;color:#fff;padding:16px 20px;text-align:center;font-size:.9rem;box-shadow:0 2px 12px rgba(0,0,0,.4);">
+  <p style="margin:0 0 8px;">请在浏览器中打开以获得完整体验</p>
+  <p style="margin:0;font-size:.75rem;opacity:.7;">点击右上角 <strong>···</strong> → <strong>在浏览器中打开</strong></p>
+</div>
+<script>
+if (/MicroMessenger/i.test(navigator.userAgent)) {
+  document.getElementById('wechatTip').style.display = 'block';
+}
+</script>
+
 <header>
   <h1>奥特曼日语学习秘密基地</h1>
   <div class="header-btns">
