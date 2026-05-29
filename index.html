@@ -139,9 +139,7 @@
   .word-card:hover { transform: translateY(-2px); border-color: var(--accent2); }
   .word-card.memorized { border-left:4px solid var(--correct); }
   .word-card .jp { font-size:1.2rem; font-weight:600; }
-  .word-card .kana { font-size:.85rem; color:var(--text2); margin-top:2px; }
-  .word-card .meaning { font-size:.9rem; color:var(--text2); margin-top:2px; }
-  .word-card .kana { display:block; }
+  .word-card .furigana { font-size:.7rem; color:var(--accent2); margin-bottom:1px; }
   .word-card .badge {
     position:absolute;
     top:8px; right:10px;
@@ -2281,8 +2279,8 @@ function renderWords() {
     card.className = 'word-card' + (isMem ? ' memorized' : '');
     card.innerHTML = `
       <span class="badge">${w.cat}</span>
-      <div class="jp">${w.j} <span style="font-size:.8rem;color:var(--text2);font-weight:400;">${w.m}</span></div>
-      <div class="kana">${w.k}</div>
+      <div class="furigana">${w.k}</div>
+      <div class="jp">${w.j} <span style="font-size:.75rem;color:var(--text2);font-weight:400;margin-left:4px;">${w.m}</span></div>
       <button class="mem-btn${isMem ? ' done' : ''}" onclick="event.stopPropagation();toggleWord('${w.j}', this)">
         ${isMem ? '✓ 覚えた' : '覚えた？'}
       </button>
