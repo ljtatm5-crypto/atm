@@ -2442,11 +2442,13 @@ function speak(text) {
   speechSynthesis.cancel();
   let u = new SpeechSynthesisUtterance(text);
   u.lang = 'ja-JP';
-  u.rate = 0.9;
-  u.pitch = 1;
-  // pick best Japanese voice
+  u.rate = 0.75;
+  u.pitch = 1.1;
+  // pick female Japanese voice
   let voices = speechSynthesis.getVoices();
-  let jaVoice = voices.find(v => v.lang === 'ja-JP' && v.name.includes('Google')) ||
+  let jaVoice = voices.find(v => v.lang === 'ja-JP' && v.name.includes('Google') && v.name.includes('female')) ||
+                voices.find(v => v.lang === 'ja-JP' && v.name.includes('Female')) ||
+                voices.find(v => v.lang === 'ja-JP' && v.name.includes('Google')) ||
                 voices.find(v => v.lang === 'ja-JP' && v.localService) ||
                 voices.find(v => v.lang === 'ja-JP');
   if (jaVoice) u.voice = jaVoice;
