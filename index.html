@@ -427,11 +427,6 @@
   <p style="margin:0 0 8px;">请在浏览器中打开以获得完整体验</p>
   <p style="margin:0;font-size:.75rem;opacity:.7;">点击右上角 <strong>···</strong> → <strong>在浏览器中打开</strong></p>
 </div>
-<script>
-if (/MicroMessenger/i.test(navigator.userAgent)) {
-  document.getElementById('wechatTip').style.display = 'block';
-}
-</script>
 
 <header>
   <h1>奥特曼日语学习秘密基地</h1>
@@ -2567,6 +2562,12 @@ function scheduleNotification() {
 // ============================================================
 renderWords();
 renderGrammar();
+
+// wechat detection (at bottom, after DOM ready)
+if (/MicroMessenger/i.test(navigator.userAgent)) {
+  var tip = document.getElementById('wechatTip');
+  if (tip) tip.style.display = 'block';
+}
 </script>
 </body>
 </html>
