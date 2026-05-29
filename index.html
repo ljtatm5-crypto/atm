@@ -2239,6 +2239,8 @@ function toggleWord(jp, btn) {
 }
 
 const REWARD_IMAGES = ['reward_1.png','reward_2.png','reward_3.png','reward_4.png'];
+// preload all reward images
+REWARD_IMAGES.forEach(function(src) { let img = new Image(); img.src = src; });
 function randomReward() { return REWARD_IMAGES[Math.floor(Math.random() * REWARD_IMAGES.length)]; }
 
 function spawnUltraman(btn) {
@@ -2247,9 +2249,16 @@ function spawnUltraman(btn) {
   popup.className = 'ultraman-popup';
   popup.style.left = (rect.left + rect.width/2) + 'px';
   popup.style.top = (rect.top) + 'px';
-  popup.innerHTML = `<img src="${randomReward()}" style="width:90px;height:90px;border-radius:12px;object-fit:cover;box-shadow:0 4px 20px rgba(255,107,107,.6);" />`;
+  let img = new Image();
+  img.src = randomReward();
+  img.style.width = '90px';
+  img.style.height = '90px';
+  img.style.borderRadius = '12px';
+  img.style.objectFit = 'cover';
+  img.style.boxShadow = '0 4px 20px rgba(255,107,107,.6)';
+  popup.appendChild(img);
   document.body.appendChild(popup);
-  setTimeout(function() { popup.remove(); }, 1300);
+  setTimeout(function() { popup.remove(); }, 1500);
 }
 
 // ============================================================
@@ -2278,13 +2287,28 @@ function getStreak() {
 function celebrateAllDone() {
   let overlay = document.createElement('div');
   overlay.className = 'celebrate-overlay';
-  let img = randomReward();
-  overlay.innerHTML = `
-    <img src="${img}" style="width:200px;height:200px;border-radius:20px;object-fit:cover;box-shadow:0 8px 40px rgba(255,215,0,.5);margin-bottom:10px;" />
-    <div class="msg">すごい！全部覚えた！</div>
-    <div class="sub">今日もよく頑張ったね ヽ(≧▽≦)ノ</div>
-    <button class="close-btn" onclick="this.parentElement.remove()">閉じる</button>
-  `;
+  let img = new Image();
+  img.src = randomReward();
+  img.style.width = '200px';
+  img.style.height = '200px';
+  img.style.borderRadius = '20px';
+  img.style.objectFit = 'cover';
+  img.style.boxShadow = '0 8px 40px rgba(255,215,0,.5)';
+  img.style.marginBottom = '10px';
+  overlay.appendChild(img);
+  let msg = document.createElement('div');
+  msg.className = 'msg';
+  msg.textContent = 'すごい！全部覚えた！';
+  overlay.appendChild(msg);
+  let sub = document.createElement('div');
+  sub.className = 'sub';
+  sub.innerHTML = '今日もよく頑張ったね ヽ(≧▽≦)ノ';
+  overlay.appendChild(sub);
+  let closeBtn = document.createElement('button');
+  closeBtn.className = 'close-btn';
+  closeBtn.textContent = '閉じる';
+  closeBtn.onclick = function() { overlay.remove(); };
+  overlay.appendChild(closeBtn);
   document.body.appendChild(overlay);
   setTimeout(function() { if (overlay.parentElement) overlay.remove(); }, 5000);
 }
