@@ -2442,9 +2442,20 @@ function speak(text) {
   speechSynthesis.cancel();
   let u = new SpeechSynthesisUtterance(text);
   u.lang = 'ja-JP';
-  u.rate = 0.85;
+  u.rate = 0.9;
   u.pitch = 1;
+  // pick best Japanese voice
+  let voices = speechSynthesis.getVoices();
+  let jaVoice = voices.find(v => v.lang === 'ja-JP' && v.name.includes('Google')) ||
+                voices.find(v => v.lang === 'ja-JP' && v.localService) ||
+                voices.find(v => v.lang === 'ja-JP');
+  if (jaVoice) u.voice = jaVoice;
   speechSynthesis.speak(u);
+}
+// preload voices
+if (window.speechSynthesis) {
+  speechSynthesis.getVoices();
+  speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
 }
 
 function toggleTheme() {
