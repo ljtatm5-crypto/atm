@@ -344,6 +344,8 @@
     margin-left:8px;
     font-family:var(--font-ja);
   }
+  .speak-btn {font-size:.7rem;cursor:pointer;margin-left:4px;opacity:.6;transition:opacity .15s;vertical-align:middle;}
+  .speak-btn:hover {opacity:1;}
 
   /* reference tab */
   .ref-layout { display:flex; gap:16px; }
@@ -2280,7 +2282,7 @@ function renderWords() {
     card.className = 'word-card' + (isMem ? ' memorized' : '');
     card.innerHTML = `
       <span class="badge">${w.cat}</span>
-      <div class="jp">${w.j} <span style="font-size:.8rem;color:var(--text2);font-weight:400;">${w.m}</span></div>
+      <div class="jp">${w.j} <span class="speak-btn" onclick="event.stopPropagation();speak('${w.j}')" title="朗读">🔊</span> <span style="font-size:.8rem;color:var(--text2);font-weight:400;">${w.m}</span></div>
       <div class="kana">${w.k}</div>
       <button class="mem-btn${isMem ? ' done' : ''}" onclick="event.stopPropagation();toggleWord('${w.j}', this)">
         ${isMem ? '✓ 覚えた' : '覚えた？'}
@@ -2330,7 +2332,7 @@ function renderGrammar() {
       </summary>
       <div class="body">
         <div class="exp">${g.exp}</div>
-        ${g.ex.map(e => `<div class="ex">${e.k ? `<div class="ex-kana">${e.k}</div>` : ''}<span class="jp">${e.j}</span><span class="cn">${e.c}</span></div>`).join('')}
+        ${g.ex.map(e => `<div class="ex">${e.k ? `<div class="ex-kana">${e.k}</div>` : ''}<span class="jp">${e.j}</span> <span class="speak-btn" onclick="event.preventDefault();speak('${e.j.replace(/'/g,"\\'")}')" title="朗读">🔊</span><span class="cn">${e.c}</span></div>`).join('')}
         <button onclick="event.preventDefault();toggleGrammarDone('${g.pat.replace(/'/g,"\\'")}')"
           style="margin-top:10px;background:var(--accent);color:#fff;border:none;padding:5px 14px;border-radius:12px;cursor:pointer;font-family:var(--font-ja);font-size:.8rem;">
           ${done.includes(g.pat) ? '✓ 完了' : '完了にする'}
@@ -2434,6 +2436,17 @@ document.querySelectorAll('#refSidebar button').forEach(btn => {
 // ============================================================
 // THEME
 // ============================================================
+// speech
+function speak(text) {
+  if (!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  let u = new SpeechSynthesisUtterance(text);
+  u.lang = 'ja-JP';
+  u.rate = 0.85;
+  u.pitch = 1;
+  speechSynthesis.speak(u);
+}
+
 function toggleTheme() {
   let cur = document.body.classList.contains('dark') ? 'light' : 'dark';
   document.body.classList.toggle('dark', cur === 'dark');
