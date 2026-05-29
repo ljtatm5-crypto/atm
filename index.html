@@ -346,10 +346,78 @@
     font-family:var(--font-ja);
   }
 
+  /* reference tab */
+  .ref-layout { display:flex; gap:16px; }
+  .ref-sidebar {
+    width:180px; flex-shrink:0;
+    background: var(--surface);
+    border:1px solid var(--border);
+    border-radius: var(--radius);
+    padding:10px 0;
+    position:sticky; top:70px;
+    align-self:flex-start;
+    max-height:calc(100vh - 90px);
+    overflow-y:auto;
+  }
+  .ref-sidebar .ch-title {
+    font-size:.75rem; font-weight:700; color:var(--text2);
+    padding:8px 14px 4px;
+    text-transform:uppercase; letter-spacing:1px;
+  }
+  .ref-sidebar button {
+    display:block; width:100%; text-align:left;
+    padding:6px 14px; border:none; background:none;
+    font-size:.8rem; cursor:pointer; color:var(--text);
+    font-family:var(--font-ja);
+    transition:background .15s;
+  }
+  .ref-sidebar button:hover { background:var(--tag-bg); }
+  .ref-sidebar button.active { color:var(--accent); font-weight:700; background:var(--tag-bg); }
+  .ref-content { flex:1; min-width:0; }
+  .ref-section { display:none; }
+  .ref-section.active { display:block; }
+  .ref-section h2 {
+    font-size:1.2rem; margin-bottom:12px; padding-bottom:8px;
+    border-bottom:2px solid var(--accent);
+  }
+  .ref-section h3 {
+    font-size:1rem; margin:16px 0 8px; color:var(--accent);
+  }
+  .ref-table {
+    width:100%; border-collapse:collapse; margin:10px 0 16px;
+    font-size:.85rem;
+  }
+  .ref-table th, .ref-table td {
+    border:1px solid var(--border); padding:8px 10px; text-align:left;
+  }
+  .ref-table th { background:var(--tag-bg); font-weight:700; }
+  .ref-table tr:nth-child(even) { background:var(--tag-bg); }
+  .ref-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius); margin-bottom:10px;
+    box-shadow:var(--shadow); overflow:hidden;
+  }
+  .ref-card summary {
+    padding:12px 16px; cursor:pointer; font-weight:600; font-size:.95rem;
+    display:flex; align-items:center; gap:8px;
+  }
+  .ref-card summary .jp-pat { color:var(--accent); }
+  .ref-card .card-body { padding:0 16px 14px; font-size:.9rem; }
+  .ref-card .card-body .ex-line {
+    background:var(--tag-bg); border-radius:6px; padding:8px 12px; margin:6px 0;
+  }
+  .ref-card .card-body .ex-line .jp { font-weight:600; }
+  .ref-card .card-body .ex-line .cn { color:var(--text2); margin-left:8px; font-size:.85rem; }
+  .ref-card .card-body .note { color:var(--text2); font-size:.8rem; margin-top:4px; font-style:italic; }
+
   /* responsive */
   @media (max-width:500px) {
     .word-grid { grid-template-columns:1fr; }
     header h1 { font-size:1.1rem; }
+    .ref-layout { flex-direction:column; }
+    .ref-sidebar { width:100%; position:static; max-height:none; display:flex; flex-wrap:wrap; gap:2px; padding:6px; }
+    .ref-sidebar .ch-title { width:100%; padding:4px 8px; }
+    .ref-sidebar button { width:auto; font-size:.75rem; padding:4px 10px; white-space:nowrap; }
   }
 </style>
 </head>
@@ -367,6 +435,7 @@
   <button class="tab-btn active" data-tab="words">今日の単語</button>
   <button class="tab-btn" data-tab="grammar">文法</button>
   <button class="tab-btn" data-tab="progress">進捗</button>
+  <button class="tab-btn" data-tab="reference">資料</button>
 </nav>
 
 <main>
@@ -404,6 +473,917 @@
     <h3 style="margin-bottom:10px;">学習履歴（直近30日）</h3>
     <ul class="history-list" id="historyList"></ul>
   </div>
+
+  <!-- ===== REFERENCE TAB ===== -->
+  <div class="tab" id="tab-reference">
+    <div class="ref-layout">
+      <div class="ref-sidebar" id="refSidebar">
+        <div class="ch-title">第一章 活用</div>
+        <button data-ref="ref-ch1" class="active">形容词/动词活用表</button>
+        <div class="ch-title">第二章 助词</div>
+        <button data-ref="ref-ch2">助词用法详解（全17个）</button>
+        <div class="ch-title">第三章 句型</div>
+        <button data-ref="ref-ch3">常考句型（12节）</button>
+        <div class="ch-title">第四章 词汇</div>
+        <button data-ref="ref-ch4">高频词汇分类整理</button>
+      </div>
+      <div class="ref-content" id="refContent">
+
+<div class="ref-section" id="ref-ch1">
+<h2>第一章 活用（词类变形）</h2>
+
+<h3>第一节 一类形容词活用</h3>
+<div class="ref-card">
+<summary>📋 <span class="jp-pat">一类形容词敬体</span></summary>
+<div class="card-body">
+<table class="ref-table">
+<tr><th>形式</th><th>规则</th><th>例（楽しい）</th><th>特殊（いい）</th></tr>
+<tr><td>非过去肯定</td><td>〜いです</td><td>楽しいです</td><td>いいです</td></tr>
+<tr><td>非过去否定</td><td>〜くないです</td><td>楽しくないです</td><td>よくないです</td></tr>
+<tr><td>过去肯定</td><td>〜かったです</td><td>楽しかったです</td><td>よかったです</td></tr>
+<tr><td>过去否定</td><td>〜くなかったです</td><td>楽しくなかったです</td><td>よくなかったです</td></tr>
+</table>
+</div></div>
+
+<div class="ref-card">
+<summary>📋 <span class="jp-pat">一类形容词简体</span></summary>
+<div class="card-body">
+<table class="ref-table">
+<tr><th>形式</th><th>规则</th><th>例（楽しい）</th><th>特殊（いい）</th></tr>
+<tr><td>非过去肯定</td><td>〜い</td><td>楽しい</td><td>いい</td></tr>
+<tr><td>非过去否定</td><td>〜くない</td><td>楽しくない</td><td>よくない</td></tr>
+<tr><td>过去肯定</td><td>〜かった</td><td>楽しかった</td><td>よかった</td></tr>
+<tr><td>过去否定</td><td>〜くなかった</td><td>楽しくなかった</td><td>よくなかった</td></tr>
+</table>
+</div></div>
+
+<div class="ref-card">
+<summary>📋 <span class="jp-pat">一类形容词其他变形</span></summary>
+<div class="card-body">
+<table class="ref-table">
+<tr><th>形式</th><th>规则</th><th>例（楽しい）</th><th>特殊（いい）</th></tr>
+<tr><td>て形</td><td>〜くて</td><td>楽しくて</td><td>よくて</td></tr>
+<tr><td>假定形</td><td>〜ければ</td><td>楽しければ</td><td>よければ</td></tr>
+<tr><td>修饰名词</td><td>〜い + N</td><td>楽しい一日 / いい天気</td><td>—</td></tr>
+<tr><td>修饰动词</td><td>〜く + V</td><td>楽しく遊ぶ / よく考える</td><td>—</td></tr>
+<tr><td>名词化</td><td>〜さ</td><td>楽しさ</td><td>よさ</td></tr>
+</table>
+</div></div>
+
+<h3>第二节 二类形容词活用</h3>
+<div class="ref-card">
+<summary>📋 <span class="jp-pat">二类形容词敬体</span></summary>
+<div class="card-body">
+<table class="ref-table">
+<tr><th>形式</th><th>规则</th><th>例（静か）</th><th>特殊（きれい）</th></tr>
+<tr><td>非过去肯定</td><td>〜です</td><td>静かです</td><td>きれいです</td></tr>
+<tr><td>非过去否定</td><td>〜ではありません</td><td>静かではありません</td><td>きれいではありません</td></tr>
+<tr><td>过去肯定</td><td>〜でした</td><td>静かでした</td><td>きれいでした</td></tr>
+<tr><td>过去否定</td><td>〜ではありませんでした</td><td>静かではありませんでした</td><td>きれいではありませんでした</td></tr>
+</table>
+</div></div>
+
+<div class="ref-card">
+<summary>📋 <span class="jp-pat">二类形容词简体</span></summary>
+<div class="card-body">
+<table class="ref-table">
+<tr><th>形式</th><th>规则</th><th>例（静か）</th><th>特殊（きれい）</th></tr>
+<tr><td>非过去肯定</td><td>〜だ</td><td>静かだ</td><td>きれいだ</td></tr>
+<tr><td>非过去否定</td><td>〜ではない</td><td>静かではない</td><td>きれいではない</td></tr>
+<tr><td>过去肯定</td><td>〜だった</td><td>静かだった</td><td>きれいだった</td></tr>
+<tr><td>过去否定</td><td>〜ではなかった</td><td>静かではなかった</td><td>きれいではなかった</td></tr>
+</table>
+</div></div>
+
+<div class="ref-card">
+<summary>📋 <span class="jp-pat">二类形容词其他变形</span></summary>
+<div class="card-body">
+<table class="ref-table">
+<tr><th>形式</th><th>规则</th><th>例（静か）</th><th>例（きれい）</th></tr>
+<tr><td>て形</td><td>〜で</td><td>静かで</td><td>きれいで</td></tr>
+<tr><td>假定形</td><td>〜なら(ば)</td><td>静かなら(ば)</td><td>きれいなら(ば)</td></tr>
+<tr><td>修饰名词</td><td>〜な + N</td><td>静かなところ</td><td>きれいなところ</td></tr>
+<tr><td>修饰动词</td><td>〜に + V</td><td>静かに読む</td><td>きれいに掃除する</td></tr>
+<tr><td>名词化</td><td>〜さ</td><td>静かさ</td><td>きれいさ</td></tr>
+</table>
+<p class="note">※ 注意：单词中最后一个假名是"い"的常见二类形容词包含：きれい、嫌い、幸い</p>
+</div></div>
+
+<h3>第三节 名词的使用</h3>
+<div class="ref-card">
+<summary>📋 <span class="jp-pat">名词敬体/简体活用</span> — 名词本身无活用，但在句型中使用方式类似二类形容词</summary>
+<div class="card-body">
+<table class="ref-table">
+<tr><th>形式</th><th>规则</th><th>例（学生）</th></tr>
+<tr><td>敬体非过去肯定</td><td>〜です</td><td>学生です</td></tr>
+<tr><td>敬体非过去否定</td><td>〜ではありません</td><td>学生ではありません</td></tr>
+<tr><td>敬体过去肯定</td><td>〜でした</td><td>学生でした</td></tr>
+<tr><td>敬体过去否定</td><td>〜ではありませんでした</td><td>学生ではありませんでした</td></tr>
+<tr><td>简体非过去肯定</td><td>〜だ</td><td>学生だ</td></tr>
+<tr><td>简体非过去否定</td><td>〜ではない</td><td>学生ではない</td></tr>
+<tr><td>简体过去肯定</td><td>〜だった</td><td>学生だった</td></tr>
+<tr><td>简体过去否定</td><td>〜ではなかった</td><td>学生ではなかった</td></tr>
+<tr><td>て形</td><td>〜で</td><td>学生で</td></tr>
+<tr><td>假定形</td><td>〜なら(ば) / であれば</td><td>学生なら(ば) / 学生であれば</td></tr>
+</table>
+</div></div>
+
+<h3>第四节 动词活用</h3>
+<div class="ref-card">
+<summary>⏰ <span class="jp-pat">动词时态一览</span></summary>
+<div class="card-body">
+<table class="ref-table">
+<tr><th>形式</th><th>规则</th><th>例（書く）</th></tr>
+<tr><td>简体非过去肯定</td><td>Vる</td><td>書く</td></tr>
+<tr><td>简体非过去否定</td><td>Vない</td><td>書かない</td></tr>
+<tr><td>简体过去肯定</td><td>Vた</td><td>書いた</td></tr>
+<tr><td>简体过去否定</td><td>Vなかった</td><td>書かなかった</td></tr>
+<tr><td>敬体非过去肯定</td><td>Vます</td><td>書きます</td></tr>
+<tr><td>敬体非过去否定</td><td>Vません</td><td>書きません</td></tr>
+<tr><td>敬体过去肯定</td><td>Vました</td><td>書きました</td></tr>
+<tr><td>敬体过去否定</td><td>Vませんでした</td><td>書きませんでした</td></tr>
+<tr><td>修饰名词</td><td>V辞書形/た形 + N</td><td>書く時、書いた時、書かない時</td></tr>
+</table>
+</div></div>
+
+<div class="ref-card">
+<summary>✏️ <span class="jp-pat">ます形（动词连用形）</span></summary>
+<div class="card-body">
+<table class="ref-table">
+<tr><th>词类</th><th>规则</th><th>原形 → ます形</th><th>特殊</th></tr>
+<tr><td>一类动词（五段）</td><td>う段 → い段 + ます</td><td>書く → 書きます</td><td>—</td></tr>
+<tr><td>二类动词（一段）</td><td>る + ます</td><td>食べる → 食べます</td><td>—</td></tr>
+<tr><td>三类动词</td><td>する → します</td><td>勉強する → 勉強します</td><td>—</td></tr>
+<tr><td>三类动词</td><td>来る → 来(き)ます</td><td>来る → 来ます</td><td>—</td></tr>
+</table>
+</div></div>
+
+<div class="ref-card">
+<summary>🔗 <span class="jp-pat">て形</span></summary>
+<div class="card-body">
+<table class="ref-table">
+<tr><th>词类</th><th>规则</th><th>例</th><th>特殊</th></tr>
+<tr><td>一类 う・つ・る</td><td>＋って</td><td>買う→買って / 待つ→待って / ある→あって</td><td>行く→行って</td></tr>
+<tr><td>一类 む・ぶ・ぬ</td><td>＋んで</td><td>読む→読んで / 遊ぶ→遊んで / 死ぬ→死んで</td><td>—</td></tr>
+<tr><td>一类 く</td><td>＋いて</td><td>書く→書いて</td><td>—</td></tr>
+<tr><td>一类 ぐ</td><td>＋いで</td><td>泳ぐ→泳いで</td><td>—</td></tr>
+<tr><td>一类 す</td><td>＋して</td><td>話す→話して</td><td>—</td></tr>
+<tr><td>二类</td><td>る → て</td><td>食べる→食べて</td><td>—</td></tr>
+<tr><td>三类 する</td><td>→ して</td><td>勉強する→勉強して</td><td>—</td></tr>
+<tr><td>三类 来る</td><td>→ 来(き)て</td><td>来る→来て</td><td>—</td></tr>
+</table>
+<p class="note">※ 补充：一类形容词て形 = い→くて（楽しい→楽しくて）；二类形容词て形 = 词干+で（静か→静かで）；名词て形 = N+で（学生→学生で）</p>
+</div></div>
+
+<div class="ref-card">
+<summary>⏪ <span class="jp-pat">た形</span></summary>
+<div class="card-body">
+<table class="ref-table">
+<tr><th>词类</th><th>规则</th><th>例</th></tr>
+<tr><td>一类 う・つ・る</td><td>＋った</td><td>買う→買った</td></tr>
+<tr><td>一类 む・ぶ・ぬ</td><td>＋んだ</td><td>読む→読んだ</td></tr>
+<tr><td>一类 く</td><td>＋いた</td><td>書く→書いた</td></tr>
+<tr><td>一类 ぐ</td><td>＋いだ</td><td>泳ぐ→泳いだ</td></tr>
+<tr><td>一类 す</td><td>＋した</td><td>話す→話した</td></tr>
+<tr><td>二类</td><td>る → た</td><td>食べる→食べた</td></tr>
+<tr><td>三类 する</td><td>→ した</td><td>勉強する→勉強した</td></tr>
+<tr><td>三类 来る</td><td>→ 来(き)た</td><td>来る→来た</td></tr>
+</table>
+</div></div>
+
+<div class="ref-card">
+<summary>❌ <span class="jp-pat">ない形（否定形）</span></summary>
+<div class="card-body">
+<table class="ref-table">
+<tr><th>词类</th><th>规则</th><th>例</th><th>特殊</th></tr>
+<tr><td>一类 う段</td><td>→ あ段 + ない</td><td>書く→書かない / 買う→買わない</td><td>ある→ない</td></tr>
+<tr><td>二类</td><td>る + ない</td><td>食べる→食べない</td><td>—</td></tr>
+<tr><td>三类 する</td><td>→ しない</td><td>勉強する→勉強しない</td><td>—</td></tr>
+<tr><td>三类 来る</td><td>→ 来(こ)ない</td><td>—</td><td>—</td></tr>
+</table>
+</div></div>
+
+<div class="ref-card">
+<summary>💪 <span class="jp-pat">意向形（〜う/よう）</span></summary>
+<div class="card-body">
+<table class="ref-table">
+<tr><th>词类</th><th>规则</th><th>例</th></tr>
+<tr><td>一类 う段</td><td>→ お段 + う</td><td>書く→書こう</td></tr>
+<tr><td>二类</td><td>る + よう</td><td>食べる→食べよう</td></tr>
+<tr><td>三类 する</td><td>→ しよう</td><td>勉強する→勉強しよう</td></tr>
+<tr><td>三类 来る</td><td>→ 来(こ)よう</td><td>—</td></tr>
+</table>
+</div></div>
+
+<div class="ref-card">
+<summary>🔁 <span class="jp-pat">假定形（〜ば）</span></summary>
+<div class="card-body">
+<table class="ref-table">
+<tr><th>词类</th><th>规则</th><th>例</th></tr>
+<tr><td>一类 う段</td><td>→ え段 + ば</td><td>書く→書けば</td></tr>
+<tr><td>二类</td><td>る + れば</td><td>食べる→食べれば</td></tr>
+<tr><td>三类 する</td><td>→ すれば</td><td>勉強する→勉強すれば</td></tr>
+<tr><td>三类 来る</td><td>→ 来(く)れば</td><td>—</td></tr>
+</table>
+<p class="note">※ 否定假定 = ない形 → なければ（書かない→書かなければ / 来ない→来なければ）</p>
+</div></div>
+
+<div class="ref-card">
+<summary>✅ <span class="jp-pat">可能形</span></summary>
+<div class="card-body">
+<table class="ref-table">
+<tr><th>词类</th><th>规则</th><th>例</th></tr>
+<tr><td>一类 う段</td><td>→ え段 + る</td><td>書く→書ける</td></tr>
+<tr><td>二类</td><td>る + られる</td><td>食べる→食べられる</td></tr>
+<tr><td>三类 する</td><td>→ できる</td><td>勉強する→勉強できる</td></tr>
+<tr><td>三类 来る</td><td>→ 来(こ)られる</td><td>—</td></tr>
+</table>
+</div></div>
+
+<div class="ref-card">
+<summary>👈 <span class="jp-pat">被动形</span></summary>
+<div class="card-body">
+<table class="ref-table">
+<tr><th>词类</th><th>规则</th><th>例</th><th>特殊</th></tr>
+<tr><td>一类 う段</td><td>→ あ段 + れる</td><td>書く→書かれる / 買う→買われる</td><td>—</td></tr>
+<tr><td>二类</td><td>る + られる</td><td>食べる→食べられる</td><td>—</td></tr>
+<tr><td>三类 する</td><td>→ される</td><td>勉強する→勉強される</td><td>—</td></tr>
+<tr><td>三类 来る</td><td>→ 来(こ)られる</td><td>—</td><td>—</td></tr>
+</table>
+</div></div>
+
+<div class="ref-card">
+<summary>👤 <span class="jp-pat">使役形</span></summary>
+<div class="card-body">
+<table class="ref-table">
+<tr><th>词类</th><th>规则</th><th>例</th><th>特殊</th></tr>
+<tr><td>一类 う段</td><td>→ あ段 + せる</td><td>書く→書かせる / 買う→買わせる</td><td>う→わ+せる</td></tr>
+<tr><td>二类</td><td>る + させる</td><td>食べる→食べさせる</td><td>—</td></tr>
+<tr><td>三类 する</td><td>→ させる</td><td>勉強する→勉強させる</td><td>—</td></tr>
+<tr><td>三类 来る</td><td>→ 来(こ)させる</td><td>—</td><td>—</td></tr>
+</table>
+</div></div>
+
+<div class="ref-card">
+<summary>😫 <span class="jp-pat">使役被动形</span></summary>
+<div class="card-body">
+<table class="ref-table">
+<tr><th>词类</th><th>规则</th><th>例</th></tr>
+<tr><td>一类 う段</td><td>→ あ段 + せられる/される</td><td>書く→書かされる / 行く→行かされる</td></tr>
+<tr><td>二类</td><td>る + させられる</td><td>食べる→食べさせられる</td></tr>
+<tr><td>三类 する</td><td>→ させられる</td><td>勉強する→勉強させられる</td></tr>
+<tr><td>三类 来る</td><td>→ 来(こ)させられる</td><td>—</td></tr>
+</table>
+</div></div>
+
+<div class="ref-card">
+<summary>🗣️ <span class="jp-pat">命令形</span></summary>
+<div class="card-body">
+<table class="ref-table">
+<tr><th>词类</th><th>规则</th><th>例</th></tr>
+<tr><td>一类 う段</td><td>→ え段</td><td>書く→書け</td></tr>
+<tr><td>二类</td><td>る → ろ / よ</td><td>食べる→食べろ</td></tr>
+<tr><td>三类 する</td><td>→ しろ / せよ</td><td>勉強する→勉強しろ</td></tr>
+<tr><td>三类 くる</td><td>→ 来(こ)い</td><td>—</td></tr>
+</table>
+</div></div>
+
+<div class="ref-card">
+<summary>🚫 <span class="jp-pat">禁止形 — Vる + な</span></summary>
+<div class="card-body">
+<p>接续：动词辞书形 + な</p>
+<p>例：<span class="jp">買うな！</span>（别买！） / <span class="jp">食べるな！</span>（别吃！）</p>
+</div></div>
+</div>
+
+<div class="ref-section" id="ref-ch2">
+<h2>第二章 助词（助詞）</h2>
+
+<div class="ref-card"><summary><span class="jp-pat">に</span> — 用法总结</summary><div class="card-body">
+<p><strong>① 动作进行的时间点</strong>（带数字的时间点 / 特殊时间点如"夏休み""誕生日"）</p>
+<p class="ex-line"><span class="jp">毎日6時に起きる。</span><span class="cn">（每天6点起床。）</span></p>
+<p class="ex-line"><span class="jp">午後3時に出かけた。</span><span class="cn">（下午3点出了门。）</span></p>
+
+<p><strong>② 提示对象</strong>（动作的对象/存在的地点）</p>
+<p class="ex-line"><span class="jp">先生は学生に日本語を教える。</span><span class="cn">（老师教学生日语。）</span></p>
+<p class="ex-line"><span class="jp">公園に木がある。</span><span class="cn">（公园里有树。）</span></p>
+
+<p><strong>③ 提示频率</strong> — 句型：N(期间)にN(次数)回</p>
+<p class="ex-line"><span class="jp">一か月に二回映画を見る。</span><span class="cn">（一个月看两次电影。）</span></p>
+
+<p><strong>④ 提示目的</strong> — 句型：Vます形/N + に行く/来る/帰る</p>
+<p class="ex-line"><span class="jp">神戸へ日本料理を食べに行く。</span><span class="cn">（去神户吃日本料理。）</span></p>
+
+<p><strong>⑤ 被动句中提示施动者</strong></p>
+<p class="ex-line"><span class="jp">私は先生に褒められた。</span><span class="cn">（我被老师表扬了。）</span></p>
+
+<p><strong>⑥ 表示目的/用途/评价</strong> — 接续：Vる + のに / N + に</p>
+<p class="ex-line"><span class="jp">このはさみは花を切るのに使う。</span><span class="cn">（这把剪刀用来剪花。）</span></p>
+
+<p><strong>⑦ 提示目的地/终点</strong>（常与行く/来る/入る等连用）</p>
+<p><strong>⑧ 提示动作着落点</strong>（常与座る/乗る/登る/着く等连用）</p>
+<p class="ex-line"><span class="jp">ここに住所を書いてください。</span><span class="cn">（请在这里写下住址。）</span></p>
+
+<p><strong>⑨ 提示搭配内容</strong> — 句型：N1にN2</p>
+<p><strong>⑩ 提示原因</strong>（多用于心理、情感动词：苦しむ/困る/疲れる/驚く等）</p>
+<p class="ex-line"><span class="jp">人間関係に疲れる。</span><span class="cn">（疲于人际交往。）</span></p>
+
+<p><strong>⑪ 提示能力主体</strong> — 句型：Nには可能动词</p>
+<p class="ex-line"><span class="jp">私には理解できない。</span><span class="cn">（我无法理解。）</span></p>
+</div></div>
+
+<div class="ref-card"><summary><span class="jp-pat">で</span> — 用法总结</summary><div class="card-body">
+<p><strong>① 表示手段/方式/工具/材料</strong></p>
+<p class="ex-line"><span class="jp">日本語で手紙を書く。</span><span class="cn">（用日语写信。）</span></p>
+<p class="ex-line"><span class="jp">この家は木でできた。</span><span class="cn">（这个房子由木头建成。）</span></p>
+
+<p><strong>② 提示动作发生场所</strong></p>
+<p class="ex-line"><span class="jp">駅で新聞を買う。</span><span class="cn">（在车站买报纸。）</span></p>
+<p class="note">※ 句型"N场所で〜がある/起こる"表示在某地发生某事</p>
+
+<p><strong>③ 表示并列</strong>（中顿） — 句型：N/A2 + で</p>
+<p class="ex-line"><span class="jp">奈良は静かで、きれいな町だ。</span><span class="cn">（奈良是安静又漂亮的城市。）</span></p>
+
+<p><strong>④ 提示数量/范围</strong> — 句型"N数量词+で"</p>
+<p class="ex-line"><span class="jp">二人で行ったほうが安心だ。</span><span class="cn">（两个人去比较安心。）</span></p>
+<p class="ex-line"><span class="jp">今日で20歳になった。</span><span class="cn">（今天20岁了。）</span></p>
+
+<p><strong>⑤ 表限定</strong>（时间/金钱/数量）</p>
+<p class="ex-line"><span class="jp">駅まで30分で行けるか。</span><span class="cn">（30分钟能到车站吗？）</span></p>
+</div></div>
+
+<div class="ref-card"><summary><span class="jp-pat">を</span> — 用法总结</summary><div class="card-body">
+<p><strong>① 提示他动词宾语</strong> — 句型：NをV他</p>
+<p class="ex-line"><span class="jp">ご飯を食べる。</span><span class="cn">（吃饭。）</span></p>
+
+<p><strong>② 提示离开/出发的场所</strong></p>
+<p class="ex-line"><span class="jp">7時に家を出る。</span><span class="cn">（7点出家门。）</span></p>
+<p class="ex-line"><span class="jp">梅田で電車を降りる。</span><span class="cn">（在梅田下车。）</span></p>
+
+<p><strong>③ 提示动作经过的场所</strong> — 句型：N地点をV移动</p>
+<p class="ex-line"><span class="jp">公園を散歩する。</span><span class="cn">（在公园散步。）</span></p>
+<p class="ex-line"><span class="jp">鳥は空を飛ぶ。</span><span class="cn">（鸟儿飞过天空。）</span></p>
+<p class="note">常用移动动词：歩く/走る/泳ぐ/渡る/散歩する/飛ぶ/登る/通る</p>
+
+<p><strong>④ 提示使役对象的自动词句</strong></p>
+<p class="ex-line"><span class="jp">母は子供を外で遊ばせる。</span><span class="cn">（妈妈让孩子到外面玩。）</span></p>
+<p class="ex-line"><span class="jp">子供は母を心配させる。</span><span class="cn">（孩子让妈妈担心。）</span></p>
+</div></div>
+
+<div class="ref-card"><summary><span class="jp-pat">は</span> — 用法总结</summary><div class="card-body">
+<p><strong>① 提示主题</strong>（提示主语/宾语作主题）</p>
+<p><strong>② 表示对比</strong></p>
+<p class="ex-line"><span class="jp">昨日は山が見えたが、今日は見えない。</span><span class="cn">（昨天能看到山，今天看不到。）</span></p>
+<p class="ex-line"><span class="jp">李さんは学生だが、王さんは会社員だ。</span><span class="cn">（小李是学生，小王是公司职员。）</span></p>
+<p><strong>③ 表示最小数量</strong>（多译为"至少"） — 句型：N数量词+は</p>
+<p class="ex-line"><span class="jp">この車を買うのに300万円は要る。</span><span class="cn">（买这辆车至少要花300万日元。）</span></p>
+<p><strong>④ 宾语主题化</strong>（把"を"变成"は"提到句首）</p>
+<p class="ex-line"><span class="jp">荷物はここに置かないでください。</span><span class="cn">（行李请不要放在这里。）</span></p>
+<p><strong>⑤ 强调否定</strong>（加在其他助词后面表强调，但不能加在が/を/に/へ/と后）</p>
+</div></div>
+
+<div class="ref-card"><summary><span class="jp-pat">が</span> — 用法总结</summary><div class="card-body">
+<p><strong>① 描述客观现象</strong>（自然现象、视觉/听觉发现）</p>
+<p class="ex-line"><span class="jp">雨が降ります。</span><span class="cn">（下雨。）</span></p>
+
+<p><strong>② 提示疑问词主语</strong>（が问が答）</p>
+<p class="ex-line"><span class="jp">誰がいますか。→ 李さんがいます。</span><span class="cn">（"谁在？""小李在。"）</span></p>
+
+<p><strong>③ 提示定语从句中的小主语</strong>（可用"の"替换）</p>
+<p class="ex-line"><span class="jp">これは田中さんが作ったケーキです。</span><span class="cn">（这是田中做的蛋糕。）</span></p>
+
+<p><strong>④ 提示喜好/能力/知觉/欲求/所有</strong></p>
+<p class="ex-line"><span class="jp">イタリア料理が好きだ。</span><span class="cn">（喜欢意大利料理。）</span></p>
+<p class="ex-line"><span class="jp">日本語ができる。</span><span class="cn">（会日语。）</span></p>
+<p class="ex-line"><span class="jp">私は犬が怖い。</span><span class="cn">（我怕狗。）</span></p>
+<p class="note">搭配词汇：わかる/できる/上手/下手/好き/嫌い/ほしい/いる/ある/怖い/心配 等</p>
+
+<p><strong>⑤ 表听觉/嗅觉/肌体感觉</strong> — 句型：N + がする</p>
+<p class="ex-line"><span class="jp">この料理はいい匂いがする。</span><span class="cn">（这料理有股香味。）</span></p>
+
+<p><strong>⑥ 描述整体属性</strong> — 句型：N1はN2が〜</p>
+<p class="ex-line"><span class="jp">大阪は食べ物がおいしいです。</span><span class="cn">（大阪的食物很好吃。）</span></p>
+
+<p><strong>⑦ 句末委婉语气</strong>（无需翻译）</p>
+<p><strong>⑧ 句末表转折</strong>（"虽然…但是…"）</p>
+</div></div>
+
+<div class="ref-card"><summary><span class="jp-pat">から</span> — 用法总结</summary><div class="card-body">
+<p><strong>① 表示时间/空间的起点</strong></p>
+<p class="ex-line"><span class="jp">9時から5時まで勉強します。</span><span class="cn">（从9点学习到5点。）</span></p>
+<p><strong>② 表示对象</strong>（多指动作发出者/来源）</p>
+<p class="ex-line"><span class="jp">私は山田さんから日本語を習います。</span><span class="cn">（我跟山田学日语。）</span></p>
+<p><strong>③ 表示原因</strong>（客观原因）</p>
+<p class="ex-line"><span class="jp">時間がありませんから、新聞を読みません。</span><span class="cn">（因为没时间，不看报纸。）</span></p>
+<p><strong>④ 表示原料</strong></p>
+<p class="ex-line"><span class="jp">ビールは麦から造られます。</span><span class="cn">（啤酒由小麦酿造。）</span></p>
+<p><strong>⑤ 表示思考/判断的依据</strong></p>
+<p class="ex-line"><span class="jp">試験結果から判断する。</span><span class="cn">（从考试结果来判断。）</span></p>
+<p>常见句型：から見ると/から見れば/から見て（从…来看）、から言うと/から言えば/から言って（从…来说）、からすると/からすれば/からして（从…来看）</p>
+</div></div>
+
+<div class="ref-card"><summary><span class="jp-pat">まで</span> — 用法总结</summary><div class="card-body">
+<p><strong>① 表示时间/空间的终点</strong></p>
+<p class="ex-line"><span class="jp">12時まで勉強する。</span><span class="cn">（学习到12点。）</span></p>
+<p class="ex-line"><span class="jp">友達を駅まで送る。</span><span class="cn">（把朋友送到车站。）</span></p>
+<p class="note">※ 注意："10時までです"和"10時に終わります"正确，但"10時まで終わります"是错的</p>
+<p><strong>② 表示某个时间段内持续的动作/状态</strong></p>
+<p class="ex-line"><span class="jp">去年までこの会社で働いていた。</span><span class="cn">（直到去年都在这个公司工作。）</span></p>
+<p><strong>③ 表极端举例</strong>（"甚至…，连…也"）</p>
+<p class="ex-line"><span class="jp">親友まで私のことを信じてくれなかった。</span><span class="cn">（连好友都不相信我。）</span></p>
+<p class="note">常见句型：N1はもちろん、N2も/まで/さえ…（N1就不用说了，连N2都…）</p>
+<p><strong>④ Vるまでもない</strong>（没必要/用不着）</p>
+</div></div>
+
+<div class="ref-card"><summary><span class="jp-pat">も</span> — 用法总结</summary><div class="card-body">
+<p><strong>① 表示"也"</strong></p>
+<p class="ex-line"><span class="jp">李さんは学生だ。王さんも学生です。</span><span class="cn">（小李是学生。小王也是。）</span></p>
+<p>常见句型：〜も〜も（并列）、〜も〜ば〜も（并列）</p>
+<p><strong>② 表示完全肯定/完全否定</strong> — 句型：N疑问词+も</p>
+<p class="ex-line"><span class="jp">どちらも好きです。</span><span class="cn">（两个都喜欢。）</span></p>
+<p class="ex-line"><span class="jp">何も食べません。</span><span class="cn">（什么都不吃。）</span></p>
+<p><strong>③ 主观认为数量多</strong>（"竟然…"） — 句型：N数量词+も+肯定</p>
+<p class="ex-line"><span class="jp">この車を買うのに400万円も要りますか。</span><span class="cn">（买这辆车竟然要花400万日元吗。）</span></p>
+<p><strong>④ 主观认为数量少</strong> — 句型：N最小数量词+も+否定</p>
+<p class="ex-line"><span class="jp">教室には一人もいません。</span><span class="cn">（教室里一个人都没有。）</span></p>
+</div></div>
+
+<div class="ref-card"><summary><span class="jp-pat">の</span> — 用法总结</summary><div class="card-body">
+<p><strong>① 提示所属/性质/方位等关系</strong></p>
+<p><strong>② 代替名词/省略后面的名词</strong>（只能省略物品，不能省略人）</p>
+<p><strong>③ 名词化</strong>（Vる + の）</p>
+<p class="ex-line"><span class="jp">テニスをするのが好きです。</span><span class="cn">（喜欢打网球。）</span></p>
+<p><strong>④ 提示定语从句中的主语</strong>（替换が）</p>
+<p><strong>⑤ 句末解释说明/疑问</strong>（〜のです / 〜んです）</p>
+</div></div>
+
+<div class="ref-card"><summary><span class="jp-pat">と</span> — 用法总结</summary><div class="card-body">
+<p><strong>① 提示变化的结果</strong></p>
+<p class="ex-line"><span class="jp">日本語教師となりました。</span><span class="cn">（成为了日语教师。）</span></p>
+<p><strong>② 提示比较的对象</strong></p>
+<p><strong>③ 表引用内容</strong>（常接：信じる/考える/思う/言う 等）</p>
+<p class="ex-line"><span class="jp">明日雨が降ると思います。</span><span class="cn">（我认为明天要下雨。）</span></p>
+<p><strong>④ 并列</strong>（AとB）</p>
+<p class="ex-line"><span class="jp">銀行の休みは土曜日と日曜日です。</span><span class="cn">（银行休息日是周六和周日。）</span></p>
+</div></div>
+
+<div class="ref-card"><summary><span class="jp-pat">へ</span> — 用法总结</summary><div class="card-body">
+<p><strong>① 提示移动方向</strong></p>
+<p class="ex-line"><span class="jp">東京へ行く。</span><span class="cn">（去东京。）</span></p>
+<p><strong>② 提示传递的对象</strong></p>
+<p class="ex-line"><span class="jp">父への手紙</span><span class="cn">（给父亲的信）</span></p>
+</div></div>
+
+<div class="ref-card"><summary><span class="jp-pat">より</span> — 用法总结</summary><div class="card-body">
+<p><strong>① 提示比较基准</strong> — 句型：AはBより（A比B更…）</p>
+<p class="ex-line"><span class="jp">私より李さんは背が高い。</span><span class="cn">（比起我，小李身高更高。）</span></p>
+<p class="ex-line"><span class="jp">この車はその車よりずっと速いです。</span><span class="cn">（这辆车比那辆车快得多。）</span></p>
+<p><strong>② 表示"更加"</strong>（副词用法）</p>
+<p class="ex-line"><span class="jp">より深く理解する。</span><span class="cn">（更深的理解。）</span></p>
+</div></div>
+
+<div class="ref-card"><summary><span class="jp-pat">か</span> — 用法总结</summary><div class="card-body">
+<p><strong>① 表示选择</strong>（"或者"）</p>
+<p class="ex-line"><span class="jp">私か妹が行きましょう。</span><span class="cn">（我或者我妹妹去吧。）</span></p>
+<p><strong>② 表示不确定</strong> — 句型：N疑问词+か</p>
+<p class="ex-line"><span class="jp">誰か教室にいますか。</span><span class="cn">（有人在教室吗？）</span></p>
+<p><strong>③ 句末疑问</strong></p>
+<p><strong>④ 接续简体句成为主句一部分</strong>（帯疑问词简体句+か / 无疑问词简体句+かどうか）</p>
+</div></div>
+
+<div class="ref-card"><summary><span class="jp-pat">でも</span> — 用法总结</summary><div class="card-body">
+<p><strong>① 表示"无论…"</strong> — N疑问词+でも</p>
+<p class="ex-line"><span class="jp">何でも / 誰でも / いつでも / どこでも</span><span class="cn">（无论什么/谁/何时/何地）</span></p>
+<p><strong>② 表示转折</strong>（"即使…"）</p>
+<p class="ex-line"><span class="jp">雨でも出かける。</span><span class="cn">（即使下雨也要出门。）</span></p>
+<p class="note">常用搭配：たとえ〜でも/ても（即使…也…）</p>
+<p><strong>③ 表示举例</strong>（"…之类的"）</p>
+<p class="ex-line"><span class="jp">お茶でも飲みながら…</span><span class="cn">（一起边喝点茶什么的边…）</span></p>
+<p><strong>④ 极举例</strong>（"连…都"）</p>
+<p class="ex-line"><span class="jp">子供でも分かります。</span><span class="cn">（连孩子都懂。）</span></p>
+</div></div>
+
+<div class="ref-card"><summary><span class="jp-pat">ぐらい / くらい</span> — 用法总结</summary><div class="card-body">
+<p><strong>① 表示大概数量</strong> — N数量词+ぐらい/くらい</p>
+<p class="ex-line"><span class="jp">会社まで一時間ぐらいかかります。</span><span class="cn">（去公司大概花一个小时左右。）</span></p>
+<p><strong>② 表极端程度</strong>（最低/最高程度均可）</p>
+<p class="ex-line"><span class="jp">部屋ぐらい自分で片付けなさい。</span><span class="cn">（至少自己收拾一下房间。）</span></p>
+<p class="ex-line"><span class="jp">涙が出るくらい嬉しい。</span><span class="cn">（高兴得流泪。）</span></p>
+</div></div>
+
+<div class="ref-card"><summary><span class="jp-pat">だけ</span> — 用法总结</summary><div class="card-body">
+<p><strong>① 表示限定</strong>（"只"）</p>
+<p class="ex-line"><span class="jp">日本語の本は一冊だけ残っています。</span><span class="cn">（日语书只剩一本。）</span></p>
+<p class="note">常见句型：だけではなく（不仅是…）</p>
+<p><strong>② 表示最大限度/范围</strong>（"只要是…""尽可能地"）</p>
+<p class="ex-line"><span class="jp">好きなだけお取りください。</span><span class="cn">（您喜欢的请随意取用。）</span></p>
+</div></div>
+
+<div class="ref-card"><summary><span class="jp-pat">しか</span> — 用法总结</summary><div class="card-body">
+<p><strong>① 表示限定</strong>（"只"）— 必须接否定表达</p>
+<p class="ex-line"><span class="jp">1時間しか待てません。</span><span class="cn">（只能等一个小时。）</span></p>
+<p><strong>② 别无他法</strong> — Vる+しかない</p>
+<p class="ex-line"><span class="jp">高すぎて買えないから、借りるしかない。</span><span class="cn">（太贵买不起，只能借。）</span></p>
+</div></div>
+
+<div class="ref-card"><summary><span class="jp-pat">ばかり</span> — 用法总结</summary><div class="card-body">
+<p><strong>① 表示"光是/尽是/只是"</strong></p>
+<p class="ex-line"><span class="jp">肉ばかり食べてはだめよ。</span><span class="cn">（光吃肉是不行的哦。）</span></p>
+<p><strong>② 总在做某事</strong>（有责备语气）— Vてばかりいる</p>
+<p class="ex-line"><span class="jp">弟はゲームをしてばかりいる。</span><span class="cn">（弟弟总在玩游戏。）</span></p>
+<p><strong>③ 刚做完某事</strong>（主观认为时间短）— Vたばかりだ</p>
+<p class="ex-line"><span class="jp">私は先月卒業したばかりです。</span><span class="cn">（我上个月刚毕业。）</span></p>
+<p class="note">"Vたばかりだ"强调主观认为时间短；"Vたところだ"强调客观时间短</p>
+<p><strong>④ 表示不好的趋势</strong>（"越来越…"）— Vるばかりだ</p>
+<p class="ex-line"><span class="jp">英語の成績は下がるばかりだ。</span><span class="cn">（英语成绩不断下降。）</span></p>
+</div></div>
+
+<div class="ref-card"><summary><span class="jp-pat">さえ</span> — 用法总结</summary><div class="card-body">
+<p><strong>① 极举例</strong>（"连…都"）</p>
+<p class="ex-line"><span class="jp">この本は子供でさえ読める。</span><span class="cn">（这本书连孩子都能读。）</span></p>
+<p><strong>② 只要…就</strong> — Nさえ〜ば</p>
+<p class="ex-line"><span class="jp">君さえいれば十分だ。</span><span class="cn">（只要你在就足够了。）</span></p>
+<p class="ex-line"><span class="jp">暇さえあれば、本を読んでいる。</span><span class="cn">（只要有空就在看书。）</span></p>
+</div></div>
+</div>
+
+<div class="ref-section" id="ref-ch3">
+<h2>第三章 句型（文型）</h2>
+
+<h3>第一节 动词变形常考句型</h3>
+
+<div class="ref-card"><summary><span class="jp-pat">Vることができる / V可能形</span> — "能…"</summary><div class="card-body">
+<p class="ex-line"><span class="jp">お酒が飲めません / お酒を飲むことができません。</span><span class="cn">（喝不了酒。）</span></p>
+<p class="note">V可能形 = 一类う段→え段+る；二类る+られる；三类する→できる；来る→来られる</p>
+</div></div>
+
+<div class="ref-card"><summary><span class="jp-pat">被动句型总结</span></summary><div class="card-body">
+<p><strong>A. 直接被动</strong> — N承受者はN施动者にV(ら)れる</p>
+<p class="ex-line"><span class="jp">私は母に買い物を頼まれました。</span><span class="cn">（我被妈妈委托去购物。）</span></p>
+<p><strong>B. 无施动者被动</strong> — 主语是无生命物体，不在乎谁做的</p>
+<p class="ex-line"><span class="jp">この建物は1999年に建てられました。</span><span class="cn">（此建筑建于1999年。）</span></p>
+<p><strong>C. 创造发明类被动</strong> — 施动者用"によって"提示</p>
+<p class="ex-line"><span class="jp">この空港は有名な建築家によって設計されました。</span><span class="cn">（这个飞机场由名家设计。）</span></p>
+<p><strong>D. 间接被动</strong>（受害被动）— 动作不直接针对主语却连累主语</p>
+<p class="ex-line"><span class="jp">私は隣の人にたばこを吸われました。</span><span class="cn">（隔壁人抽烟影响到了我。）</span></p>
+<p><strong>E. 所有物被动</strong> — 主语的所有物被损害</p>
+<p class="ex-line"><span class="jp">私は母に日記を見られました。</span><span class="cn">（我的日记被妈妈看了。）</span></p>
+<p><strong>F. 尊敬被动</strong> — 不能用于自己/己方</p>
+<p class="ex-line"><span class="jp">先生は毎日新聞を読まれています。</span><span class="cn">（老师每天都看报纸。）</span></p>
+</div></div>
+
+<div class="ref-card"><summary><span class="jp-pat">使役句型总结</span></summary><div class="card-body">
+<p><strong>A. 自动词使役</strong> — N主语はN被使役者をV自(さ)せる</p>
+<p class="ex-line"><span class="jp">私は子供を外で遊ばせます。</span><span class="cn">（我让孩子到外面玩。）</span></p>
+<p><strong>B. 他动词使役</strong> — N主语はN被使役者にN宾语をV他(さ)せる</p>
+<p class="ex-line"><span class="jp">私は子供に野菜を食べさせます。</span><span class="cn">（我让孩子吃蔬菜。）</span></p>
+<p class="note">※ 他动词使役句中无论宾语是否出现，被使役者都用"に"提示</p>
+</div></div>
+
+<div class="ref-card"><summary><span class="jp-pat">使役 + 授受 组合句型</span></summary><div class="card-body">
+<table class="ref-table">
+<tr><th>意思</th><th>句型</th><th>例</th></tr>
+<tr><td>允许别人做</td><td>V(さ)せてあげる/やる</td><td>日本語の本を読ませてあげる（允许小李看日语书）</td></tr>
+<tr><td>请求允许自己做</td><td>V(さ)せてもらえませんか</td><td>日本語の本を読ませてもらえませんか（可以让我看日语书吗？）</td></tr>
+<tr><td>请求对方允许自己做</td><td>V(さ)せてください/くれませんか</td><td>日本語の本を読ませてくださいませんか（可以让我看日语书吗？）</td></tr>
+</table>
+</div></div>
+
+<h3>第二节 自他动词 / 意志无意志 / 瞬间持续动词</h3>
+
+<div class="ref-card"><summary><span class="jp-pat">自他动词常考句型</span></summary><div class="card-body">
+<p><strong>核心区别：</strong></p>
+<table class="ref-table">
+<tr><th></th><th>自动词</th><th>他动词</th></tr>
+<tr><td>主语标记</td><td>Nが + V自</td><td>Nは + Nを + V他</td></tr>
+<tr><td>例句</td><td>ドアが開く（门开了）</td><td>ドアを開ける（开门）</td></tr>
+</table>
+
+<p style="margin-top:12px;"><strong>常见自他动词对：</strong></p>
+<table class="ref-table">
+<tr><th>自动词</th><th>他动词</th><th>规律</th></tr>
+<tr><td>開く(あく)</td><td>開ける(あける)</td><td>自=あ段+る VS 他=え段+る</td></tr>
+<tr><td>閉まる(しまる)</td><td>閉める(しめる)</td><td>自=あ段+る VS 他=え段+る</td></tr>
+<tr><td>止まる(とまる)</td><td>止める(とめる)</td><td>自=あ段+る VS 他=え段+る</td></tr>
+<tr><td>始まる(はじまる)</td><td>始める(はじめる)</td><td>自=あ段+る VS 他=え段+る</td></tr>
+<tr><td>変わる(かわる)</td><td>変える(かえる)</td><td>自=あ段+る VS 他=え段+る</td></tr>
+<tr><td>消える(きえる)</td><td>消す(けす)</td><td>自=え段+る VS 他=す</td></tr>
+<tr><td>出る(でる)</td><td>出す(だす)</td><td>自=え段+る VS 他=す</td></tr>
+<tr><td>入る(はいる)</td><td>入れる(いれる)</td><td>特殊</td></tr>
+<tr><td>出る(でる)</td><td>出す(だす)</td><td>自=え段+る VS 他=す</td></tr>
+<tr><td>切れる(きれる)</td><td>切る(きる)</td><td>自=え段+る VS 他=う段</td></tr>
+<tr><td>届く(とどく)</td><td>届ける(とどける)</td><td>自=く VS 他=ける</td></tr>
+<tr><td>つく</td><td>つける</td><td>自=く VS 他=ける</td></tr>
+<tr><td>かかる</td><td>かける</td><td>特殊</td></tr>
+</table>
+
+<p>规律总结：<br>
+规律一：自动词（あ段+る结尾）VS 他动词（え段+る结尾）<br>
+规律二：自动词（く结尾）VS 他动词（す结尾）<br>
+规律三：自动词（う段结尾）VS 他动词（え段+る结尾）</p>
+</div></div>
+
+<h3>第三节 ～する・なる 相关句型</h3>
+
+<div class="ref-card"><summary><span class="jp-pat">〜にする / 〜になる</span></summary><div class="card-body">
+<p><strong>〜にする</strong> = 主观选择/决定（人为使其变成）</p>
+<p class="ex-line"><span class="jp">コーヒーにします。</span><span class="cn">（我要咖啡。/ 我决定要咖啡。）</span></p>
+<p><strong>〜になる</strong> = 客观变化（自然而然变成）</p>
+<p class="ex-line"><span class="jp">もう春になりました。</span><span class="cn">（已经是春天了。）</span></p>
+<p class="ex-line"><span class="jp">日本語教師になりました。</span><span class="cn">（成为了日语教师。）</span></p>
+<p><strong>A2/N + にする</strong>（使…变得…）</p>
+<p class="ex-line"><span class="jp">部屋をきれいにしました。</span><span class="cn">（把房间打扫干净了。）</span></p>
+<p><strong>A2/N + になる</strong>（变得…）</p>
+<p class="ex-line"><span class="jp">部屋がきれいになりました。</span><span class="cn">（房间变干净了。）</span></p>
+<p><strong>A1くする / A1くなる</strong></p>
+<p class="ex-line"><span class="jp">音を大きくする。</span><span class="cn">（把声音调大。）→ 人为</span></p>
+<p class="ex-line"><span class="jp">音が大きくなる。</span><span class="cn">（声音变大了。）→ 自然</span></p>
+</div></div>
+
+<h3>第四节 否定表达常考句型</h3>
+<div class="ref-card"><summary>否定表达系列</summary><div class="card-body">
+<p><strong>Vなくてはいけない / Vなければいけない / Vないといけない</strong> — "必须…"</p>
+<p class="ex-line"><span class="jp">野菜を食べなければいけない。</span><span class="cn">（必须吃蔬菜。）</span></p>
+<p><strong>Vなくてもいい</strong> — "不…也行"</p>
+<p class="ex-line"><span class="jp">明日来なくてもいいです。</span><span class="cn">（明天不来也行。）</span></p>
+<p><strong>Vてはいけない</strong> — "不可以…"</p>
+<p class="ex-line"><span class="jp">ここでタバコを吸ってはいけない。</span><span class="cn">（不可以在这里抽烟。）</span></p>
+<p><strong>Vなくちゃ</strong>（口语）= Vなければ</p>
+</div></div>
+
+<h3>第五节 助动词常用句型① "想"系列</h3>
+<div class="ref-card"><summary><span class="jp-pat">希望・愿望表达</span></summary><div class="card-body">
+<p><strong>Vます形 + たい</strong> — "想做…"（第一人称）</p>
+<p class="ex-line"><span class="jp">日本へ行きたいです。</span><span class="cn">（想去日本。）</span></p>
+<p><strong>Vます形 + たがる</strong> — "想做…"（第三人称）</p>
+<p class="ex-line"><span class="jp">弟は日本へ行きたがっている。</span><span class="cn">（弟弟想去日本。）</span></p>
+<p><strong>N + がほしい</strong> — "想要…"</p>
+<p class="ex-line"><span class="jp">新しいパソコンがほしい。</span><span class="cn">（想要新电脑。）</span></p>
+<p><strong>Vてほしい</strong> — "希望别人做…"</p>
+<p class="ex-line"><span class="jp">早く来てほしい。</span><span class="cn">（希望你早点来。）</span></p>
+</div></div>
+
+<h3>第六节 助动词常用句型② "好像"系列</h3>
+<div class="ref-card"><summary><span class="jp-pat">推量・样态表达</span></summary><div class="card-body">
+<p><strong>Vます形 + そうだ</strong> — "看起来要…"（样态）</p>
+<p class="ex-line"><span class="jp">雨が降りそうです。</span><span class="cn">（看起来要下雨。）</span></p>
+<p><strong>A1い → 〜そうだ</strong>（去い）</p>
+<p class="ex-line"><span class="jp">このケーキはおいしそうです。</span><span class="cn">（这个蛋糕看起来很好吃。）</span></p>
+<p><strong>简体句 + ようだ</strong> — "好像…"（主观推断/比喻）</p>
+<p><strong>简体句 + みたいだ</strong> — "好像…"（口语，= ようだ）</p>
+<p><strong>简体句 + らしい</strong> — "据说…"/"好像…"（客观传闻/典型特征）</p>
+<p><strong>简体句 + そうだ</strong> — "听说…"（传闻）</p>
+</div></div>
+
+<h3>第七节 常用接续句型</h3>
+<div class="ref-card"><summary>常用接续句型一览</summary><div class="card-body">
+<p><strong>Vて / A1くて / A2で / Nで</strong> — 并列/顺序/原因</p>
+<p class="ex-line"><span class="jp">朝起きて、顔を洗って、ご飯を食べる。</span><span class="cn">（早上起床、洗脸、吃饭。）</span></p>
+<p><strong>Vたり Vたりする</strong> — "又…又…"（举例）</p>
+<p class="ex-line"><span class="jp">日曜日は本を読んだり、映画を見たりする。</span><span class="cn">（周日读读书，看看电影。）</span></p>
+<p><strong>Vながら</strong> — "一边…一边…"</p>
+<p class="ex-line"><span class="jp">音楽を聞きながら歩く。</span><span class="cn">（边听音乐边走。）</span></p>
+<p><strong>V前に / Vた後で</strong> — "在…之前/之后"</p>
+<p><strong>Vと</strong> — "一…就…"（必然结果）</p>
+<p><strong>Vたら</strong> — "如果…就…"（假定/发现）</p>
+<p><strong>Vば</strong> — "如果…"（假设/条件）</p>
+<p><strong>Vても</strong> — "即使…也…"</p>
+<p><strong>Vし</strong> — 列举理由（多个原因之一）</p>
+<p><strong>Vので</strong> — "因为…所以…"（客观因果）</p>
+<p><strong>Vから</strong> — "因为…"（主观因果）</p>
+<p><strong>Vために</strong> — "为了…"（目的）/ "因为…"（原因）</p>
+<p><strong>Vことにする / Vことになる</strong> — "决定做…"（主观/客观）</p>
+</div></div>
+
+<h3>第八节 补助动词常考句型</h3>
+<div class="ref-card"><summary><span class="jp-pat">补助动词用法</span></summary><div class="card-body">
+<p><strong>Vている</strong> — 正在进行/状态持续/反复习惯</p>
+<p class="ex-line"><span class="jp">今、ご飯を食べている。</span><span class="cn">（现在正在吃饭。）</span></p>
+<p class="ex-line"><span class="jp">結婚している。</span><span class="cn">（已婚。）</span></p>
+<p><strong>Vてある</strong> — 动作结果的状态（人为准备）</p>
+<p class="ex-line"><span class="jp">窓が開けてある。</span><span class="cn">（窗户是开着的。— 有人打开的）</span></p>
+<p class="note">对比：窓が開いている（窗户开着。— 不强调人为）</p>
+<p><strong>Vておく</strong> — 事先做好</p>
+<p><strong>Vてしまう</strong> — 完了/遗憾（口语：ちゃう/じゃう）</p>
+<p><strong>Vてみる</strong> — 尝试做…</p>
+<p><strong>Vていく / Vてくる</strong> — 时空趋势（去/来）</p>
+</div></div>
+
+<h3>第九节 授受表达（授受表現）</h3>
+<div class="ref-card"><summary><span class="jp-pat">あげる / くれる / もらう</span></summary><div class="card-body">
+<table class="ref-table">
+<tr><th>方向</th><th>动词</th><th>句型</th><th>含义</th></tr>
+<tr><td>我→别人</td><td>あげる/やる</td><td>Vてあげる</td><td>我为别人做…</td></tr>
+<tr><td>别人→我</td><td>くれる</td><td>Vてくれる</td><td>别人为我做…</td></tr>
+<tr><td>我←别人</td><td>もらう</td><td>Vてもらう</td><td>我请别人做…/从别人那里得到…</td></tr>
+</table>
+<p>敬语版：あげる→差し上げる / くれる→くださる / もらう→いただく</p>
+</div></div>
+
+<h3>第十节 敬谦表达</h3>
+<div class="ref-card"><summary><span class="jp-pat">敬语三种类型</span></summary><div class="card-body">
+<p><strong>尊敬语</strong>（抬高对方）：お/ご + Vます + になる / V(ら)れる / 特殊尊敬动词</p>
+<p><strong>谦让语</strong>（贬低自己）：お/ご + Vます + する / 特殊谦让动词</p>
+<p><strong>郑重语</strong>（礼貌）：です/ます / ございます</p>
+<p class="note">常见特殊动词：言う→おっしゃる(尊)/申す(谦)、行く/来る→いらっしゃる(尊)/参る(谦)、食べる/飲む→召し上がる(尊)/いただく(谦) 等</p>
+</div></div>
+
+<h3>第十一节 形式名词</h3>
+<div class="ref-card"><summary><span class="jp-pat">こと / もの / の / ところ / はず / わけ</span></summary><div class="card-body">
+<p><strong>こと</strong> — 将动词名词化（抽象/一般性）</p>
+<p><strong>もの</strong> — 将动词名词化（具体/本质）</p>
+<p><strong>の</strong> — 将动词名词化（具体/个别）</p>
+<p><strong>ところ</strong> — 时间场合</p>
+<p><strong>はず</strong> — "应该…"（客观推断）</p>
+<p><strong>わけ</strong> — "当然…"/"并不是…"（わけではない）</p>
+<p><strong>つもり</strong> — "打算…"</p>
+<p><strong>まま</strong> — "保持某种状态…"</p>
+</div></div>
+
+<h3>第十二节 中高级高频句型</h3>
+<div class="ref-card"><summary><span class="jp-pat">N2级重要句型补充</span></summary><div class="card-body">
+<p><strong>〜にしたがって / 〜につれて</strong> — "随着…"</p>
+<p><strong>〜にとって</strong> — "对于…来说"</p>
+<p><strong>〜に対して</strong> — "对于…"（对比/态度）</p>
+<p><strong>〜について</strong> — "关于…"</p>
+<p><strong>〜によって</strong> — "根据…/由于…/由…"（三种含义）</p>
+<p><strong>〜において / 〜における</strong> — "在…"（正式场合）</p>
+<p><strong>〜にわたって</strong> — "长达…/遍及…"</p>
+<p><strong>〜を通じて / 〜を通して</strong> — "通过…"</p>
+<p><strong>〜をめぐって</strong> — "围绕着…"</p>
+<p><strong>〜に限って / 〜に限らず</strong> — "仅限于…/不仅限于…"</p>
+<p><strong>〜ばかりでなく / 〜のみならず</strong> — "不仅…"</p>
+<p><strong>〜どころか</strong> — "岂止…/别说…了"</p>
+<p><strong>〜たとたん</strong> — "刚一…就…"</p>
+<p><strong>〜に違いない</strong> — "一定…/肯定…"</p>
+<p><strong>〜わけがない</strong> — "不可能…"</p>
+<p><strong>〜ざるを得ない</strong> — "不得不…"</p>
+<p><strong>〜おそれがある</strong> — "有…的危险/恐怕…"</p>
+</div></div>
+</div>
+
+<div class="ref-section" id="ref-ch4">
+<h2>第四章 词汇（語彙）</h2>
+
+<h3>第一节 常见词组</h3>
+<div class="ref-card"><summary><span class="jp-pat">动词+名词常见搭配</span></summary><div class="card-body">
+<table class="ref-table">
+<tr><th>动词</th><th>常见搭配</th><th>含义</th></tr>
+<tr><td>する</td><td>勉強をする / 掃除をする / 料理をする / 買い物をする</td><td>学习/打扫/做菜/购物</td></tr>
+<tr><td>取る</td><td>写真を取る / メモを取る / 休みを取る</td><td>拍照/做笔记/请假</td></tr>
+<tr><td>作る</td><td>料理を作る / 友達を作る / 思い出を作る</td><td>做菜/交朋友/创造回忆</td></tr>
+<tr><td>つける</td><td>気をつける / 日記をつける / 電気をつける</td><td>小心/写日记/开灯</td></tr>
+<tr><td>かける</td><td>電話をかける / 眼鏡をかける / 迷惑をかける</td><td>打电话/戴眼镜/添麻烦</td></tr>
+<tr><td>持つ</td><td>興味を持つ / 自信を持つ / 責任を持つ</td><td>感兴趣/有自信/负责</td></tr>
+<tr><td>受ける</td><td>試験を受ける / 授業を受ける / 影響を受ける</td><td>参加考试/上课/受影响</td></tr>
+</table>
+</div></div>
+
+<h3>第四节 こそあど要点总结</h3>
+<div class="ref-card"><summary><span class="jp-pat">こ・そ・あ・ど 指示词</span></summary><div class="card-body">
+<table class="ref-table">
+<tr><th>系列</th><th>こ（近）</th><th>そ（中）</th><th>あ（远）</th><th>ど（疑问）</th></tr>
+<tr><td>物</td><td>これ</td><td>それ</td><td>あれ</td><td>どれ</td></tr>
+<tr><td>物+N</td><td>この+N</td><td>その+N</td><td>あの+N</td><td>どの+N</td></tr>
+<tr><td>场所</td><td>ここ</td><td>そこ</td><td>あそこ</td><td>どこ</td></tr>
+<tr><td>方向</td><td>こちら/こっち</td><td>そちら/そっち</td><td>あちら/あっち</td><td>どちら/どっち</td></tr>
+<tr><td>方式</td><td>こんな</td><td>そんな</td><td>あんな</td><td>どんな</td></tr>
+</table>
+<p class="note">核心：こ=说话人附近 / そ=听话人附近 / あ=两者都远 / ど=疑问</p>
+</div></div>
+
+<h3>第五节 常见量词</h3>
+<div class="ref-card"><summary><span class="jp-pat">数詞・助数詞</span></summary><div class="card-body">
+<table class="ref-table">
+<tr><th>量词</th><th>用途</th><th>常见读法</th></tr>
+<tr><td>〜人(にん)</td><td>人数</td><td>1人=ひとり 2人=ふたり 3人=さんにん</td></tr>
+<tr><td>〜匹(ひき)</td><td>小型动物</td><td>1匹=いっぴき 2匹=にひき 3匹=さんびき</td></tr>
+<tr><td>〜頭(とう)</td><td>大型动物</td><td>1頭=いっとう</td></tr>
+<tr><td>〜冊(さつ)</td><td>书/本</td><td>1冊=いっさつ</td></tr>
+<tr><td>〜枚(まい)</td><td>扁平物(纸/盘子)</td><td>1枚=いちまい</td></tr>
+<tr><td>〜台(だい)</td><td>机械/车</td><td>1台=いちだい</td></tr>
+<tr><td>〜本(ほん)</td><td>细长物(瓶/笔)</td><td>1本=いっぽん 2本=にほん 3本=さんぼん</td></tr>
+<tr><td>〜杯(はい)</td><td>杯/碗</td><td>1杯=いっぱい</td></tr>
+<tr><td>〜回(かい)</td><td>次数</td><td>1回=いっかい</td></tr>
+<tr><td>〜階(かい)</td><td>楼层</td><td>1階=いっかい</td></tr>
+</table>
+</div></div>
+
+<h3>第六节 高频副词</h3>
+<div class="ref-card"><summary><span class="jp-pat">よく使う副詞</span></summary><div class="card-body">
+<table class="ref-table">
+<tr><th>类型</th><th>副词</th><th>含义</th></tr>
+<tr><td>程度</td><td>とても / 大変(たいへん)</td><td>非常</td></tr>
+<tr><td>程度</td><td>ちょっと / 少し(すこし)</td><td>稍微</td></tr>
+<tr><td>程度</td><td>ほとんど</td><td>几乎</td></tr>
+<tr><td>程度</td><td>もっと</td><td>更加</td></tr>
+<tr><td>程度</td><td>ずっと</td><td>…得多</td></tr>
+<tr><td>程度</td><td>かなり</td><td>相当</td></tr>
+<tr><td>频率</td><td>いつも</td><td>总是</td></tr>
+<tr><td>频率</td><td>よく</td><td>经常</td></tr>
+<tr><td>频率</td><td>時々(ときどき)</td><td>有时</td></tr>
+<tr><td>频率</td><td>たまに</td><td>偶尔</td></tr>
+<tr><td>频率</td><td>めったに〜ない</td><td>几乎不</td></tr>
+<tr><td>频率</td><td>全然(ぜんぜん)〜ない</td><td>完全不</td></tr>
+<tr><td>时间</td><td>もう</td><td>已经</td></tr>
+<tr><td>时间</td><td>まだ</td><td>还/还没</td></tr>
+<tr><td>时间</td><td>すぐ</td><td>马上</td></tr>
+<tr><td>时间</td><td>やっと</td><td>终于</td></tr>
+<tr><td>时间</td><td>とうとう</td><td>终于(消极结果)</td></tr>
+<tr><td>语气</td><td>きっと</td><td>一定(推测)</td></tr>
+<tr><td>语气</td><td>ぜひ</td><td>一定(愿望)</td></tr>
+<tr><td>语气</td><td>必ず(かならず)</td><td>一定(客观)</td></tr>
+<tr><td>语气</td><td>もちろん</td><td>当然</td></tr>
+<tr><td>语气</td><td>なるほど</td><td>原来如此</td></tr>
+<tr><td>语气</td><td>たしか</td><td>如果没记错的话</td></tr>
+</table>
+</div></div>
+
+<h3>第七～八节 必备形容词</h3>
+<div class="ref-card"><summary><span class="jp-pat">高频一类形容词（〜い）</span></summary><div class="card-body">
+<p>大きい、小さい、高い、安い、新しい、古い、暑い、寒い、熱い、冷たい、早い、遅い、多い、少ない、遠い、近い、広い、狭い、明るい、暗い、楽しい、嬉しい、悲しい、寂しい、怖い、痛い、眠い、正しい、難しい、易しい、優しい、厳しい、忙しい、欲しい、美味しい、まずい、甘い、辛い、苦い、しょっぱい、若い、良い/いい、悪い、強い、弱い、長い、短い、重い、軽い、太い、細い、危ない、素晴らしい、羨ましい、恥ずかしい、面白い、つまらない</p>
+</div></div>
+
+<div class="ref-card"><summary><span class="jp-pat">高频二类形容词（〜な）</span></summary><div class="card-body">
+<p>静か、賑やか、便利、大変、元気、上手、下手、好き、嫌い、きれい、有名、親切、大切、必要、大丈夫、結構、残念、心配、安全、簡単、複雑、真面目、自由、勝手、確か、色々、無理、立派、嫌、同じ(※连体词)</p>
+</div></div>
+
+<h3>第九节 高频外来语</h3>
+<div class="ref-card"><summary><span class="jp-pat">カタカナ語</span></summary><div class="card-body">
+<table class="ref-table">
+<tr><th>外来语</th><th>含义</th><th>外来语</th><th>含义</th></tr>
+<tr><td>アルバイト</td><td>打工</td><td>エアコン</td><td>空调</td></tr>
+<tr><td>スーパー</td><td>超市</td><td>コンビニ</td><td>便利店</td></tr>
+<tr><td>レストラン</td><td>餐厅</td><td>ホテル</td><td>酒店</td></tr>
+<tr><td>テレビ</td><td>电视</td><td>パソコン</td><td>电脑</td></tr>
+<tr><td>インターネット</td><td>网络</td><td>スマホ</td><td>智能手机</td></tr>
+<tr><td>メール</td><td>邮件</td><td>アドレス</td><td>地址</td></tr>
+<tr><td>ニュース</td><td>新闻</td><td>ドア</td><td>门</td></tr>
+<tr><td>スイッチ</td><td>开关</td><td>ボタン</td><td>按钮</td></tr>
+<tr><td>エレベーター</td><td>电梯</td><td>エスカレーター</td><td>扶梯</td></tr>
+<tr><td>プレゼント</td><td>礼物</td><td>チケット</td><td>票</td></tr>
+<tr><td>アパート</td><td>公寓</td><td>マンション</td><td>高级公寓</td></tr>
+<tr><td>バス</td><td>公交</td><td>タクシー</td><td>出租车</td></tr>
+<tr><td>テスト</td><td>考试</td><td>クラス</td><td>班级</td></tr>
+<tr><td>スポーツ</td><td>运动</td><td>サッカー</td><td>足球</td></tr>
+<tr><td>コーヒー</td><td>咖啡</td><td>ジュース</td><td>果汁</td></tr>
+</table>
+</div></div>
+
+<h3>第十节 常见接续词</h3>
+<div class="ref-card"><summary><span class="jp-pat">接続詞</span></summary><div class="card-body">
+<table class="ref-table">
+<tr><th>接续词</th><th>含义</th><th>类型</th></tr>
+<tr><td>そして</td><td>然后/而且</td><td>并列/递进</td></tr>
+<tr><td>それに</td><td>而且</td><td>递进</td></tr>
+<tr><td>また</td><td>另外/又</td><td>并列</td></tr>
+<tr><td>しかし</td><td>但是</td><td>转折(正式)</td></tr>
+<tr><td>でも</td><td>但是</td><td>转折(口语)</td></tr>
+<tr><td>ところが</td><td>然而(意外)</td><td>转折</td></tr>
+<tr><td>だから</td><td>所以</td><td>因果</td></tr>
+<tr><td>ですから</td><td>所以(礼貌)</td><td>因果</td></tr>
+<tr><td>それで</td><td>因此</td><td>因果</td></tr>
+<tr><td>そのため</td><td>因此(正式)</td><td>因果</td></tr>
+<tr><td>つまり</td><td>也就是说/总之</td><td>总结</td></tr>
+<tr><td>例えば</td><td>例如</td><td>举例</td></tr>
+<tr><td>一方</td><td>另一方面</td><td>对比</td></tr>
+</table>
+</div></div>
+
+<h3>第十一节 常见接尾词</h3>
+<div class="ref-card"><summary><span class="jp-pat">接尾語</span></summary><div class="card-body">
+<table class="ref-table">
+<tr><th>接尾词</th><th>含义</th><th>例</th></tr>
+<tr><td>〜すぎる</td><td>过于…</td><td>食べすぎる（吃太多）</td></tr>
+<tr><td>〜やすい</td><td>容易…</td><td>わかりやすい（容易懂）</td></tr>
+<tr><td>〜にくい</td><td>难以…</td><td>食べにくい（难吃）</td></tr>
+<tr><td>〜方(かた)</td><td>…方法</td><td>作り方（做法）</td></tr>
+<tr><td>〜中(ちゅう)</td><td>正在…中</td><td>授業中（上课中）</td></tr>
+<tr><td>〜後(ご)</td><td>…之后</td><td>食事後（饭后）</td></tr>
+<tr><td>〜的(てき)</td><td>…性的</td><td>積極的（积极的）</td></tr>
+<tr><td>〜化(か)</td><td>…化</td><td>国際化（国际化）</td></tr>
+</table>
+</div></div>
+
+<h3>第十二节 常见多音汉字</h3>
+<div class="ref-card"><summary><span class="jp-pat">多音字注意</span></summary><div class="card-body">
+<table class="ref-table">
+<tr><th>汉字</th><th>音读</th><th>训读</th></tr>
+<tr><td>日</td><td>ニチ/ジツ（日曜日、毎日）</td><td>ひ/か（朝日、三日）</td></tr>
+<tr><td>月</td><td>ゲツ/ガツ（月曜日、一月）</td><td>つき（月見）</td></tr>
+<tr><td>人</td><td>ジン/ニン（日本人、三人）</td><td>ひと（人々）</td></tr>
+<tr><td>大</td><td>ダイ/タイ（大変、大学）</td><td>おお（大きい）</td></tr>
+<tr><td>小</td><td>ショウ（小学校）</td><td>ちい（小さい）/こ（小鳥）</td></tr>
+<tr><td>生</td><td>セイ/ショウ（学生、誕生日）</td><td>い（生きる）/う（生まれる）</td></tr>
+<tr><td>行</td><td>コウ/ギョウ（旅行、銀行）</td><td>い（行く）/おこな（行う）</td></tr>
+<tr><td>来</td><td>ライ（来年、来週）</td><td>く（来る）/き（来ます）</td></tr>
+</table>
+</div></div>
+</div>
+      </div>
+    </div>
+  </div>
+
 </main>
 
 <script>
@@ -1203,6 +2183,16 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     this.classList.add('active');
     document.getElementById('tab-' + this.dataset.tab).classList.add('active');
     if (this.dataset.tab === 'progress') renderProgress();
+  });
+});
+
+// Reference tab sub-navigation
+document.querySelectorAll('#refSidebar button').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('#refSidebar button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.ref-section').forEach(s => s.classList.remove('active'));
+    this.classList.add('active');
+    document.getElementById(this.dataset.ref).classList.add('active');
   });
 });
 
