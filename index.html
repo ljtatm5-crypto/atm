@@ -2436,31 +2436,26 @@ document.querySelectorAll('#refSidebar button').forEach(btn => {
 // ============================================================
 // THEME
 // ============================================================
-// speech
+// speech - Google TTS (natural female voice)
 function speak(text) {
-  if (!window.speechSynthesis) return;
-  speechSynthesis.cancel();
-  let u = new SpeechSynthesisUtterance(text);
-  u.lang = 'ja-JP';
-  u.rate = 0.75;
-  u.pitch = 1.15;
-  // pick female Japanese voice - try multiple patterns
-  let voices = speechSynthesis.getVoices();
-  let jaVoices = voices.filter(v => v.lang === 'ja-JP');
-  // skip male voices, prefer female: Haruka/Ayumi/Nanami/Google ja-JP female
-  let female = jaVoices.find(v =>
-    v.name.includes('Haruka') || v.name.includes('Ayumi') || v.name.includes('Nanami') ||
-    v.name.includes('Sayaka') || v.name.includes('female') || v.name.includes('Female')
-  ) || jaVoices.find(v => v.name.includes('Google') && !v.name.includes('Ichiro') && !v.name.includes('male'))
-    || jaVoices.find(v => !v.name.includes('Ichiro') && !v.name.includes('male'))
-    || jaVoices[0];
-  if (female) u.voice = female;
-  speechSynthesis.speak(u);
-}
-// preload voices
-if (window.speechSynthesis) {
-  speechSynthesis.getVoices();
-  speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+  let audio = new Audio();
+  audio.src = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=ja&client=tw-ob&q=' + encodeURIComponent(text);
+  audio.play().catch(function() {
+    // fallback to Web Speech API
+    if (!window.speechSynthesis) return;
+    speechSynthesis.cancel();
+    let u = new SpeechSynthesisUtterance(text);
+    u.lang = 'ja-JP';
+    u.rate = 0.75;
+    u.pitch = 1.15;
+    let voices = speechSynthesis.getVoices();
+    let jaVoices = voices.filter(function(v) { return v.lang === 'ja-JP'; });
+    let female = jaVoices.find(function(v) { return v.name.includes('Haruka') || v.name.includes('Ayumi') || v.name.includes('Nanami') || v.name.includes('Sayaka'); })
+              || jaVoices.find(function(v) { return !v.name.includes('Ichiro'); })
+              || jaVoices[0];
+    if (female) u.voice = female;
+    speechSynthesis.speak(u);
+  });
 }
 
 function toggleTheme() {
