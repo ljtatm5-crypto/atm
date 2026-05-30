@@ -2442,13 +2442,22 @@ function speak(text) {
   speechSynthesis.cancel();
   let u = new SpeechSynthesisUtterance(text);
   u.lang = 'ja-JP';
-  u.rate = 0.75;
-  u.pitch = 1.15;
+  u.rate = 0.8;
+  u.pitch = 1.2;
   let voices = speechSynthesis.getVoices();
-  // try female voice, skip male Ichiro
-  let v = voices.find(function(v) { return v.lang === 'ja-JP' && (v.name.includes('Haruka') || v.name.includes('Ayumi')); })
-       || voices.find(function(v) { return v.lang === 'ja-JP' && !v.name.includes('Ichiro'); })
-       || voices.find(function(v) { return v.lang === 'ja-JP'; });
+  // female voice patterns across platforms:
+  // Windows: Haruka, Ayumi, Sayaka
+  // macOS/iOS: Kyoko, Otoya, Siri
+  // Android/ChromeOS: Google ja-JP (female by default)
+  // Linux: various
+  let femalePatterns = ['Haruka','Ayumi','Sayaka','Kyoko','Otoya','Siri','female','Female'];
+  let v = null;
+  for (let i = 0; i < femalePatterns.length; i++) {
+    v = voices.find(function(vv) { return vv.lang === 'ja-JP' && vv.name.indexOf(femalePatterns[i]) !== -1; });
+    if (v) break;
+  }
+  if (!v) v = voices.find(function(vv) { return vv.lang === 'ja-JP' && vv.name.indexOf('Ichiro') === -1; });
+  if (!v) v = voices.find(function(vv) { return vv.lang === 'ja-JP'; });
   if (v) u.voice = v;
   speechSynthesis.speak(u);
 }
