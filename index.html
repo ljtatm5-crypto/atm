@@ -2443,15 +2443,17 @@ function speak(text) {
   let u = new SpeechSynthesisUtterance(text);
   u.lang = 'ja-JP';
   u.rate = 0.75;
-  u.pitch = 1.1;
-  // pick female Japanese voice
+  u.pitch = 1.15;
+  // pick female Japanese voice - try multiple patterns
   let voices = speechSynthesis.getVoices();
-  let jaVoice = voices.find(v => v.lang === 'ja-JP' && v.name.includes('Google') && v.name.includes('female')) ||
-                voices.find(v => v.lang === 'ja-JP' && v.name.includes('Female')) ||
-                voices.find(v => v.lang === 'ja-JP' && v.name.includes('Google')) ||
-                voices.find(v => v.lang === 'ja-JP' && v.localService) ||
-                voices.find(v => v.lang === 'ja-JP');
-  if (jaVoice) u.voice = jaVoice;
+  let jaVoices = voices.filter(v => v.lang === 'ja-JP');
+  // female name patterns: Ayumi, Haruka, Nanami, female, woman, 女性
+  let female = jaVoices.find(v =>
+    v.name.includes('Ayumi') || v.name.includes('Haruka') || v.name.includes('Nanami') ||
+    v.name.includes('female') || v.name.includes('Female') || v.name.includes('女性') ||
+    v.name.includes('Google') && v.name.includes('ja-JP')
+  ) || jaVoices.find(v => v.name.includes('Google')) || jaVoices[0];
+  if (female) u.voice = female;
   speechSynthesis.speak(u);
 }
 // preload voices
