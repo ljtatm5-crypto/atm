@@ -2447,12 +2447,13 @@ function speak(text) {
   // pick female Japanese voice - try multiple patterns
   let voices = speechSynthesis.getVoices();
   let jaVoices = voices.filter(v => v.lang === 'ja-JP');
-  // female name patterns: Ayumi, Haruka, Nanami, female, woman, 女性
+  // skip male voices, prefer female: Haruka/Ayumi/Nanami/Google ja-JP female
   let female = jaVoices.find(v =>
-    v.name.includes('Ayumi') || v.name.includes('Haruka') || v.name.includes('Nanami') ||
-    v.name.includes('female') || v.name.includes('Female') || v.name.includes('女性') ||
-    v.name.includes('Google') && v.name.includes('ja-JP')
-  ) || jaVoices.find(v => v.name.includes('Google')) || jaVoices[0];
+    v.name.includes('Haruka') || v.name.includes('Ayumi') || v.name.includes('Nanami') ||
+    v.name.includes('Sayaka') || v.name.includes('female') || v.name.includes('Female')
+  ) || jaVoices.find(v => v.name.includes('Google') && !v.name.includes('Ichiro') && !v.name.includes('male'))
+    || jaVoices.find(v => !v.name.includes('Ichiro') && !v.name.includes('male'))
+    || jaVoices[0];
   if (female) u.voice = female;
   speechSynthesis.speak(u);
 }
